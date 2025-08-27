@@ -8,9 +8,10 @@ import AssessmentAnalysis from './AssessmentAnalysis'
 import SymptomsChecker from './SymptomsChecker'
 import AwarenessPages from './AwarenessPages'
 import ReclaimBenefits from './ReclaimBenefits'
+import SocialProof from './SocialProof'
 import CalAIOnboardingFlow from './CalAIOnboardingFlow'
 
-type OnboardingStep = 'quiz' | 'loading' | 'analysis' | 'symptoms' | 'awareness' | 'benefits' | 'calai'
+type OnboardingStep = 'quiz' | 'loading' | 'analysis' | 'symptoms' | 'awareness' | 'benefits' | 'socialproof' | 'calai'
 
 export default function OnboardingFlow() {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('quiz')
@@ -52,11 +53,19 @@ export default function OnboardingFlow() {
   }
 
   const handleBenefitsComplete = () => {
-    setCurrentStep('calai')
+    setCurrentStep('socialproof')
   }
 
   const handleBenefitsBack = () => {
     setCurrentStep('awareness')
+  }
+
+  const handleSocialProofComplete = () => {
+    setCurrentStep('calai')
+  }
+
+  const handleSocialProofBack = () => {
+    setCurrentStep('benefits')
   }
 
   return (
@@ -139,6 +148,21 @@ export default function OnboardingFlow() {
               selectedSymptoms={selectedSymptoms}
               onComplete={handleBenefitsComplete}
               onBack={handleBenefitsBack}
+            />
+          </motion.div>
+        )}
+
+        {currentStep === 'socialproof' && (
+          <motion.div
+            key="socialproof"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <SocialProof 
+              selectedSymptoms={selectedSymptoms}
+              onComplete={handleSocialProofComplete}
+              onBack={handleSocialProofBack}
             />
           </motion.div>
         )}
