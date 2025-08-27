@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import CalAIOnboardingFlow from '@/components/onboarding/CalAIOnboardingFlow'
+import OnboardingFlow from '@/components/onboarding/OnboardingFlow'
 import Hero from '@/components/common/Hero'
 import PreOnboarding from '@/components/onboarding/PreOnboarding'
 
@@ -103,7 +103,7 @@ export default function HomePage() {
   }
 
   if (showOnboarding) {
-    return <CalAIOnboardingFlow />
+    return <OnboardingFlow />
   }
 
   return (
