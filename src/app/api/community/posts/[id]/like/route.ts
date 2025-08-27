@@ -76,10 +76,18 @@ export async function POST(
         })
 
       // Increase like count
-      await supabaseAdmin
+      const { data: currentPost } = await supabaseAdmin
         .from('community_posts')
-        .update({ like_count: supabaseAdmin.sql`like_count + 1` })
+        .select('like_count')
         .eq('id', postId)
+        .single()
+      
+      if (currentPost) {
+        await supabaseAdmin
+          .from('community_posts')
+          .update({ like_count: (currentPost.like_count || 0) + 1 })
+          .eq('id', postId)
+      }
 
       return NextResponse.json({
         success: true,
