@@ -15,6 +15,7 @@ import InvestmentPage from './InvestmentPage'
 import CustomPlanPage from './CustomPlanPage'
 import EnhancedPaywall from './EnhancedPaywall'
 import CalAIOnboardingFlow from './CalAIOnboardingFlow'
+import { supabase } from '@/lib/supabase'
 
 type OnboardingStep = 'quiz' | 'loading' | 'analysis' | 'symptoms' | 'awareness' | 'benefits' | 'socialproof' | 'rating' | 'welcome' | 'investment' | 'customplan' | 'paywall' | 'calai'
 
@@ -96,8 +97,22 @@ export default function OnboardingFlow() {
     setCurrentStep('paywall')
   }
 
-  const handlePaywallSubscribe = (plan: 'monthly' | 'yearly') => {
+  const handlePaywallSubscribe = async (plan: 'monthly' | 'yearly') => {
     console.log('User selected plan:', plan)
+    
+    try {
+      // Mark user as having completed onboarding
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) {
+        await supabase
+          .from('users')
+          .update({ has_completed_onboarding: true })
+          .eq('id', session.user.id)
+      }
+    } catch (error) {
+      console.error('Error updating onboarding status:', error)
+    }
+    
     // Here you would handle the subscription
     setCurrentStep('calai')
   }

@@ -153,6 +153,10 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
 
       const result = await response.json()
       
+      if (!response.ok) {
+        throw new Error(result.error || `HTTP ${response.status}: ${response.statusText}`)
+      }
+      
       if (result.success) {
         onComplete(result.data)
       } else {
@@ -160,7 +164,7 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
       }
     } catch (error) {
       console.error('Error submitting assessment:', error)
-      alert('Failed to submit assessment. Please try again.')
+      alert(`Failed to submit assessment: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setSubmitting(false)
     }
