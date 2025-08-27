@@ -7,9 +7,10 @@ import AssessmentLoading from './AssessmentLoading'
 import AssessmentAnalysis from './AssessmentAnalysis'
 import SymptomsChecker from './SymptomsChecker'
 import AwarenessPages from './AwarenessPages'
+import ReclaimBenefits from './ReclaimBenefits'
 import CalAIOnboardingFlow from './CalAIOnboardingFlow'
 
-type OnboardingStep = 'quiz' | 'loading' | 'analysis' | 'symptoms' | 'awareness' | 'calai'
+type OnboardingStep = 'quiz' | 'loading' | 'analysis' | 'symptoms' | 'awareness' | 'benefits' | 'calai'
 
 export default function OnboardingFlow() {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('quiz')
@@ -43,11 +44,19 @@ export default function OnboardingFlow() {
   }
 
   const handleAwarenessComplete = () => {
-    setCurrentStep('calai')
+    setCurrentStep('benefits')
   }
 
   const handleAwarenessBack = () => {
     setCurrentStep('symptoms')
+  }
+
+  const handleBenefitsComplete = () => {
+    setCurrentStep('calai')
+  }
+
+  const handleBenefitsBack = () => {
+    setCurrentStep('awareness')
   }
 
   return (
@@ -115,6 +124,21 @@ export default function OnboardingFlow() {
               selectedSymptoms={selectedSymptoms}
               onComplete={handleAwarenessComplete}
               onBack={handleAwarenessBack}
+            />
+          </motion.div>
+        )}
+
+        {currentStep === 'benefits' && (
+          <motion.div
+            key="benefits"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <ReclaimBenefits 
+              selectedSymptoms={selectedSymptoms}
+              onComplete={handleBenefitsComplete}
+              onBack={handleBenefitsBack}
             />
           </motion.div>
         )}
