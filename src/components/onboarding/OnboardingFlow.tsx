@@ -9,9 +9,10 @@ import SymptomsChecker from './SymptomsChecker'
 import AwarenessPages from './AwarenessPages'
 import ReclaimBenefits from './ReclaimBenefits'
 import SocialProof from './SocialProof'
+import RatingScreen from './RatingScreen'
 import CalAIOnboardingFlow from './CalAIOnboardingFlow'
 
-type OnboardingStep = 'quiz' | 'loading' | 'analysis' | 'symptoms' | 'awareness' | 'benefits' | 'socialproof' | 'calai'
+type OnboardingStep = 'quiz' | 'loading' | 'analysis' | 'symptoms' | 'awareness' | 'benefits' | 'socialproof' | 'rating' | 'calai'
 
 export default function OnboardingFlow() {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('quiz')
@@ -61,11 +62,21 @@ export default function OnboardingFlow() {
   }
 
   const handleSocialProofComplete = () => {
-    setCurrentStep('calai')
+    setCurrentStep('rating')
   }
 
   const handleSocialProofBack = () => {
     setCurrentStep('benefits')
+  }
+
+  const handleRatingComplete = (rating: number, feedback: string) => {
+    // Here you could save the rating and feedback to your database
+    console.log('User rating:', rating, 'Feedback:', feedback)
+    setCurrentStep('calai')
+  }
+
+  const handleRatingSkip = () => {
+    setCurrentStep('calai')
   }
 
   return (
@@ -163,6 +174,20 @@ export default function OnboardingFlow() {
               selectedSymptoms={selectedSymptoms}
               onComplete={handleSocialProofComplete}
               onBack={handleSocialProofBack}
+            />
+          </motion.div>
+        )}
+
+        {currentStep === 'rating' && (
+          <motion.div
+            key="rating"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <RatingScreen 
+              onComplete={handleRatingComplete}
+              onSkip={handleRatingSkip}
             />
           </motion.div>
         )}
