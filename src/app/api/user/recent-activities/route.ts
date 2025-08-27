@@ -35,7 +35,17 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const activities = []
+    interface Activity {
+      id: string
+      type: 'learning' | 'checkin' | 'achievement' | 'community'
+      title: string
+      description: string
+      timestamp: string
+      icon: string
+      color: string
+    }
+
+    const activities: Activity[] = []
 
     // Fetch recent learning completions
     const { data: learningActivities } = await supabase
