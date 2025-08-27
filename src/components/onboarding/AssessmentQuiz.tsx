@@ -183,30 +183,27 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
         // If not authenticated, create mock data and continue flow
         const mockAssessmentData = {
           assessmentId: 'temp-' + Date.now(),
+          // Flatten the structure to match what AssessmentAnalysis expects
           totalScore: allResponses.reduce((sum, r) => sum + (r.response_value || 0), 0),
           severityLevel: 'moderate',
-          analysis: {
-            totalScore: allResponses.reduce((sum, r) => sum + (r.response_value || 0), 0),
-            severityLevel: 'moderate',
-            categoryScores: {
-              frequency: allResponses.filter(r => r.category === 'frequency').reduce((sum, r) => sum + (r.response_value || 0), 0),
-              impact: allResponses.filter(r => r.category === 'impact').reduce((sum, r) => sum + (r.response_value || 0), 0),
-              control: allResponses.filter(r => r.category === 'control').reduce((sum, r) => sum + (r.response_value || 0), 0),
-              motivation: allResponses.filter(r => r.category === 'motivation').reduce((sum, r) => sum + (r.response_value || 0), 0)
-            },
-            averageScores: {
-              frequency: 2.5,
-              impact: 1.8,
-              control: 2.2,
-              motivation: 4.5
-            },
-            recommendations: [
-              'Implement structured recovery plan',
-              'Seek support from community',
-              'Practice mindfulness and stress management',
-              'Set clear boundaries and limits'
-            ]
-          }
+          categoryScores: {
+            frequency: allResponses.filter(r => r.category === 'frequency').reduce((sum, r) => sum + (r.response_value || 0), 0),
+            impact: allResponses.filter(r => r.category === 'impact').reduce((sum, r) => sum + (r.response_value || 0), 0),
+            control: allResponses.filter(r => r.category === 'control').reduce((sum, r) => sum + (r.response_value || 0), 0),
+            motivation: allResponses.filter(r => r.category === 'motivation').reduce((sum, r) => sum + (r.response_value || 0), 0)
+          },
+          averageScores: {
+            frequency: 2.5,
+            impact: 1.8,
+            control: 2.2,
+            motivation: 4.5
+          },
+          recommendations: [
+            'Implement structured recovery plan',
+            'Seek support from community',
+            'Practice mindfulness and stress management',
+            'Set clear boundaries and limits'
+          ]
         }
         
         onComplete(mockAssessmentData)
