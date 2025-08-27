@@ -64,9 +64,10 @@ export async function POST(request: NextRequest) {
     const newStreak = await streakDb.create({
       user_id: user.id,
       start_date: new Date().toISOString().split('T')[0], // Today's date
+      end_date: null, // Will be set when streak ends
       duration_days: 1,
       is_active: true,
-      
+      milestones_reached: [] // Empty array for new streak
     })
 
     // Update user's current streak reference
