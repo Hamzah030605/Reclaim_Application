@@ -36,7 +36,7 @@ export default function DashboardPage() {
 
       if (userProfile) {
         // Check if user is premium
-        if (!userProfile.is_premium) {
+        if (!(userProfile as any).is_premium) {
           router.push('/paywall')
           return
         }
