@@ -77,13 +77,22 @@ export default function HomePage() {
   }
 
   const handleGetStarted = () => {
-    // Redirect to login page
-    router.push('/auth/login')
+    // Show pre-onboarding first to build emotional investment
+    setShowPreOnboarding(true)
+  }
+
+  const handleStartOnboarding = () => {
+    setShowPreOnboarding(false)
+    setShowOnboarding(true)
   }
 
   const handleSkipToSignup = () => {
     // Skip onboarding and go directly to signup
     router.push('/auth/signup')
+  }
+
+  const handleLogin = () => {
+    router.push('/auth/login')
   }
 
   if (loading) {
@@ -94,48 +103,50 @@ export default function HomePage() {
     )
   }
 
-  // Show simple landing page for unauthenticated users
+  if (showPreOnboarding) {
+    return (
+      <div className="relative">
+        <PreOnboarding 
+          onStartOnboarding={handleStartOnboarding}
+          onSkipToSignup={handleSkipToSignup}
+        />
+        {/* Login button overlay */}
+        <button
+          onClick={handleLogin}
+          className="absolute top-4 right-4 px-4 py-2 bg-white/10 text-white rounded-lg border border-white/20 hover:bg-white/20 transition-all"
+        >
+          Login
+        </button>
+      </div>
+    )
+  }
+
+  if (showOnboarding) {
+    return (
+      <div className="relative">
+        <OnboardingFlow />
+        {/* Login button overlay */}
+        <button
+          onClick={handleLogin}
+          className="absolute top-4 right-4 px-4 py-2 bg-white/10 text-white rounded-lg border border-white/20 hover:bg-white/20 transition-all z-50"
+        >
+          Login
+        </button>
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-blue to-brand-blue-dark">
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6"
-          >
-            Reclaim
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl mx-auto"
-          >
-            Take control of your life. Break free from harmful habits and build a better future.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="space-y-4"
-          >
-            <button
-              onClick={handleGetStarted}
-              className="px-8 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 font-semibold rounded-lg text-lg hover:from-yellow-300 hover:to-yellow-400 transition-all transform hover:scale-105"
-            >
-              Get Started
-            </button>
-            <div>
-              <button
-                onClick={handleSkipToSignup}
-                className="text-white/60 hover:text-white underline"
-              >
-                Already have an account? Sign in
-              </button>
-            </div>
-          </motion.div>
-        </div>
+    <div className="min-h-screen bg-gradient-bg">
+      <div className="relative">
+        <Hero onGetStarted={handleGetStarted} />
+        {/* Login button overlay */}
+        <button
+          onClick={handleLogin}
+          className="absolute top-4 right-4 px-4 py-2 bg-white/10 text-white rounded-lg border border-white/20 hover:bg-white/20 transition-all"
+        >
+          Login
+        </button>
       </div>
     </div>
   )

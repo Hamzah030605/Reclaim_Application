@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import AssessmentQuiz from './AssessmentQuiz'
 import AssessmentLoading from './AssessmentLoading'
@@ -16,6 +16,7 @@ import CustomPlanPage from './CustomPlanPage'
 import EnhancedPaywall from './EnhancedPaywall'
 import CalAIOnboardingFlow from './CalAIOnboardingFlow'
 import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
 
 type OnboardingStep = 'quiz' | 'loading' | 'analysis' | 'symptoms' | 'awareness' | 'benefits' | 'socialproof' | 'rating' | 'welcome' | 'investment' | 'customplan' | 'paywall' | 'calai'
 
@@ -24,6 +25,26 @@ export default function OnboardingFlow() {
   const [assessmentData, setAssessmentData] = useState<any>(null)
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([])
   const [userName, setUserName] = useState<string>('')
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+  const router = useRouter()
+
+  useEffect(() => {
+    checkAuthStatus()
+  }, [])
+
+  const checkAuthStatus = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      setIsAuthenticated(!!session?.user)
+    } catch (error) {
+      console.error('Error checking auth status:', error)
+      setIsAuthenticated(false)
+    }
+  }
+
+  const handleLogin = () => {
+    router.push('/auth/login')
+  }
 
   const handleQuizComplete = (data: any) => {
     setAssessmentData(data)
@@ -100,19 +121,6 @@ export default function OnboardingFlow() {
   const handlePaywallSubscribe = async (plan: 'monthly' | 'yearly') => {
     console.log('User selected plan:', plan)
     
-    try {
-      // Mark user as having completed onboarding
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session?.user) {
-        await supabase
-          .from('users')
-          .update({ has_completed_onboarding: true })
-          .eq('id', session.user.id)
-      }
-    } catch (error) {
-      console.error('Error updating onboarding status:', error)
-    }
-    
     // Here you would handle the subscription
     setCurrentStep('calai')
   }
@@ -131,7 +139,31 @@ export default function OnboardingFlow() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <AssessmentQuiz onComplete={handleQuizComplete} />
+            {isAuthenticated === null ? (
+              <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                  <p className="text-white">Loading...</p>
+                </div>
+              </div>
+            ) : isAuthenticated ? (
+              <AssessmentQuiz onComplete={handleQuizComplete} />
+            ) : (
+              <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center max-w-md mx-auto px-4">
+                  <h2 className="text-3xl font-bold text-white mb-4">Sign In to Continue</h2>
+                  <p className="text-white/80 mb-8">
+                    To complete the assessment and get your personalized recovery plan, please sign in to your account.
+                  </p>
+                  <button
+                    onClick={handleLogin}
+                    className="px-8 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 font-semibold rounded-lg hover:from-yellow-300 hover:to-yellow-400 transition-all transform hover:scale-105"
+                  >
+                    Sign In
+                  </button>
+                </div>
+              </div>
+            )}
           </motion.div>
         )}
 
