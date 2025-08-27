@@ -16,6 +16,19 @@ export default function HomePage() {
   const [onboardingIncomplete, setOnboardingIncomplete] = useState(false)
 
   useEffect(() => {
+    // Check for OAuth tokens in URL fragment first
+    const handleOAuthCallback = async () => {
+      const url = window.location.href
+      if (url.includes('#')) {
+        console.log('OAuth tokens detected in URL fragment, redirecting to callback...')
+        // Redirect to the proper callback route with the tokens
+        const hashFragment = url.split('#')[1]
+        router.push(`/auth/callback#${hashFragment}`)
+        return
+      }
+    }
+
+    handleOAuthCallback()
     checkAuthStatus()
     
     // Check for onboarding incomplete parameter
