@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  body {
+    @apply bg-light-bg text-primary-text;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-blue hover:bg-brand-blue/90 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-subtle-gray hover:bg-border-gray text-primary-text font-medium py-3 px-6 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-success {
+    @apply bg-success-green hover:bg-success-green/90 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-panic {
+    @apply bg-panic-red hover:bg-panic-red/90 text-white font-bold py-4 px-8 rounded-full transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-border-gray/30 p-6;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent;
+  }
+  
+  .streak-display {
+    @apply text-4xl font-bold text-success-green;
+  }
+  
+  .xp-display {
+    @apply text-lg font-semibold text-achievement-gold;
+  }
+  
+  .level-progress-bar {
+    @apply transition-all duration-500 ease-out;
+  }
+  
+  .level-badge {
+    @apply transition-all duration-200 hover:scale-105;
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .text-shadow-xl {
+    text-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+  }
+  
+  .text-shadow-2xl {
+    text-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+  }
+  
+  .animate-bounce-gentle {
+    animation: bounce 2s infinite;
+  }
+  
+  .gradient-bg {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #2c3e50 100%);
+  }
+}
