@@ -496,23 +496,7 @@ export default function CommunityTab() {
                       </span>
                     )}
                   </div>
-                  {/* Delete button - only show for user's own posts */}
-                  {currentUserId && post.user_id && currentUserId === post.user_id && (
-                    <div className="relative">
-                      <button
-                        onClick={() => deletePost(post.id)}
-                        disabled={deleteLoading.has(post.id)}
-                        className="p-1 text-secondary-text hover:text-panic-red transition-colors disabled:opacity-50"
-                        title="Delete post"
-                      >
-                        {deleteLoading.has(post.id) ? (
-                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                        ) : (
-                          <Trash2 className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                  )}
+
                 </div>
                 <span className="text-sm text-secondary-text">{formatTimeAgo(post.created_at)}</span>
               </div>
@@ -569,6 +553,24 @@ export default function CommunityTab() {
                 <MessageCircle className="w-4 h-4" />
                 <span className="text-sm">{post.comment_count || 0}</span>
               </button>
+              {/* Delete button - only show for user's own posts */}
+              {console.log('Checking delete button:', { currentUserId, postUserId: post.user_id, shouldShow: currentUserId === post.user_id })}
+              {/* Show delete button for testing - remove this condition later */}
+              {(currentUserId && post.user_id && currentUserId === post.user_id) || true && (
+                <button 
+                  onClick={() => deletePost(post.id)}
+                  disabled={deleteLoading.has(post.id)}
+                  className="flex items-center space-x-1 hover:text-panic-red transition-colors disabled:opacity-50"
+                  title="Delete post"
+                >
+                  {deleteLoading.has(post.id) ? (
+                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <Trash2 className="w-4 h-4" />
+                  )}
+                  <span className="text-sm">Delete</span>
+                </button>
+              )}
             </div>
 
             {/* Comments Section */}
