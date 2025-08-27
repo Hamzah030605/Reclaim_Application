@@ -1,14 +1,13 @@
 'use client'
 
-import { useEffect } from 'react'
-import { Suspense } from 'react'
+import { useEffect, Suspense } from 'react'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
-export default function CallbackPage() {
+function CallbackContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -210,5 +209,22 @@ export default function CallbackPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function CallbackPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Loading...
+          </h2>
+        </div>
+      </div>
+    }>
+      <CallbackContent />
+    </Suspense>
   )
 }

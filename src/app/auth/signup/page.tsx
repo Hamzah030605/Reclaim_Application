@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { CheckCircle, Star, Users, Target, ArrowRight } from 'lucide-react'
 
-export default function SignupPage() {
+function SignupContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
@@ -297,5 +297,22 @@ export default function SignupPage() {
         </motion.div>
       </div>
     </div>
+  )
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Loading...
+          </h2>
+        </div>
+      </div>
+    }>
+      <SignupContent />
+    </Suspense>
   )
 }
