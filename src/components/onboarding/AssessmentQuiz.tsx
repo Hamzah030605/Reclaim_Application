@@ -134,12 +134,6 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
     try {
       const { data: { session } } = await supabase.auth.getSession()
       
-      if (!session) {
-        // User is not authenticated, redirect to login
-        router.push('/auth/login')
-        return
-      }
-
       // Prepare responses with personal info
       const allResponses = [
         ...responses,
@@ -159,29 +153,63 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
         }
       ]
 
-      const response = await fetch('/api/assessment/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
-        },
-        body: JSON.stringify({
-          responses: allResponses,
-          name: personalInfo.name,
-          age: parseInt(personalInfo.age)
+      // If user is authenticated, save to database
+      if (session) {
+        const response = await fetch('/api/assessment/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`
+          },
+          body: JSON.stringify({
+            responses: allResponses,
+            name: personalInfo.name,
+            age: parseInt(personalInfo.age)
+          })
         })
-      })
 
-      const result = await response.json()
-      
-      if (!response.ok) {
-        throw new Error(result.error || `HTTP ${response.status}: ${response.statusText}`)
-      }
-      
-      if (result.success) {
-        onComplete(result.data)
+        const result = await response.json()
+        
+        if (!response.ok) {
+          throw new Error(result.error || `HTTP ${response.status}: ${response.statusText}`)
+        }
+        
+        if (result.success) {
+          onComplete(result.data)
+        } else {
+          throw new Error(result.error || 'Failed to submit assessment')
+        }
       } else {
-        throw new Error(result.error || 'Failed to submit assessment')
+        // If not authenticated, create mock data and continue flow
+        const mockAssessmentData = {
+          assessmentId: 'temp-' + Date.now(),
+          totalScore: allResponses.reduce((sum, r) => sum + (r.response_value || 0), 0),
+          severityLevel: 'moderate',
+          analysis: {
+            totalScore: allResponses.reduce((sum, r) => sum + (r.response_value || 0), 0),
+            severityLevel: 'moderate',
+            categoryScores: {
+              frequency: allResponses.filter(r => r.category === 'frequency').reduce((sum, r) => sum + (r.response_value || 0), 0),
+              impact: allResponses.filter(r => r.category === 'impact').reduce((sum, r) => sum + (r.response_value || 0), 0),
+              control: allResponses.filter(r => r.category === 'control').reduce((sum, r) => sum + (r.response_value || 0), 0),
+              motivation: allResponses.filter(r => r.category === 'motivation').reduce((sum, r) => sum + (r.response_value || 0), 0)
+            },
+            averageScores: {
+              frequency: 2.5,
+              impact: 1.8,
+              control: 2.2,
+              motivation: 4.5
+            },
+            recommendations: [
+              'Implement structured recovery plan',
+              'Seek support from community',
+              'Practice mindfulness and stress management',
+              'Set clear boundaries and limits'
+            ]
+          }
+        }
+        
+        onComplete(mockAssessmentData)
       }
     } catch (error) {
       console.error('Error submitting assessment:', error)
@@ -342,15 +370,20 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
           {!isAuthenticated && currentQuestionIndex >= questions.length - 3 && (
             <div className="text-center mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
               <p className="text-white/80 mb-3">
-                Almost done! Sign in to save your progress and get your personalized plan.
+                Want to save your progress and get your personalized plan? Sign in to continue your journey.
               </p>
-              <button
-                onClick={handleLogin}
-                className="flex items-center mx-auto px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 font-semibold rounded-lg hover:from-yellow-300 hover:to-yellow-400 transition-all"
-              >
-                <LogIn className="w-4 h-4 mr-2" />
-                Sign In to Continue
-              </button>
+              <div className="flex justify-center space-x-4">
+                <button
+                  onClick={handleLogin}
+                  className="flex items-center px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 font-semibold rounded-lg hover:from-yellow-300 hover:to-yellow-400 transition-all"
+                >
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Sign In
+                </button>
+                <span className="text-white/60 text-sm flex items-center">
+                  or continue without saving
+                </span>
+              </div>
             </div>
           )}
 
