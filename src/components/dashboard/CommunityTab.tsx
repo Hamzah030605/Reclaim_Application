@@ -112,6 +112,7 @@ export default function CommunityTab() {
       if (!user) return
 
       setCurrentUserId(user.id)
+      console.log('Current user ID set:', user.id)
 
       const { data: profile } = await supabase
         .from('users')
@@ -496,7 +497,7 @@ export default function CommunityTab() {
                     )}
                   </div>
                   {/* Delete button - only show for user's own posts */}
-                  {currentUserId === post.user_id && (
+                  {currentUserId && post.user_id && currentUserId === post.user_id && (
                     <div className="relative">
                       <button
                         onClick={() => deletePost(post.id)}
