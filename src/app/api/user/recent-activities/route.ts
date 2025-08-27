@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
           id: `lesson-${activity.lesson_id}`,
           type: 'learning',
           title: 'Completed lesson',
-          description: `Finished learning: ${activity.lesson_id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}`,
+          description: `Finished learning: ${activity.lesson_id.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}`,
           timestamp: activity.completed_at,
           icon: 'book-open',
           color: 'success-green'
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
         activities.push({
           id: `achievement-${achievement.achievement_id}`,
           type: 'achievement',
-          title: `Earned "${achievement.achievement_id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}" badge`,
+          title: `Earned "${achievement.achievement_id.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}" badge`,
           description: 'Unlocked a new achievement',
           timestamp: achievement.earned_at,
           icon: 'trophy',
