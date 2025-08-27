@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -9,7 +10,8 @@ import {
   Brain,
   Heart,
   Target,
-  Users
+  Users,
+  LogIn
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
@@ -41,10 +43,27 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
   const [personalInfo, setPersonalInfo] = useState({ name: '', age: '' })
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     fetchQuestions()
+    checkAuthStatus()
   }, [])
+
+  const checkAuthStatus = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      setIsAuthenticated(!!session?.user)
+    } catch (error) {
+      console.error('Error checking auth status:', error)
+      setIsAuthenticated(false)
+    }
+  }
+
+  const handleLogin = () => {
+    router.push('/auth/login')
+  }
 
   const fetchQuestions = async () => {
     try {
@@ -116,7 +135,9 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
       const { data: { session } } = await supabase.auth.getSession()
       
       if (!session) {
-        throw new Error('No session found')
+        // User is not authenticated, redirect to login
+        router.push('/auth/login')
+        return
       }
 
       // Prepare responses with personal info
@@ -201,52 +222,67 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-brand-blue to-brand-blue-dark">
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          {/* Progress Bar */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between text-white mb-2">
-              <span className="text-sm">Question {currentQuestionIndex + 1} of {questions.length}</span>
-              <span className="text-sm">{Math.round(getProgressPercentage())}%</span>
+        {/* Header with progress and login prompt */}
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex-1">
+            <div className="flex items-center mb-2">
+              <div className="w-full bg-white/20 rounded-full h-2 mr-4">
+                <div 
+                  className="bg-gradient-to-r from-yellow-400 to-yellow-500 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${getProgressPercentage()}%` }}
+                ></div>
+              </div>
+              <span className="text-white text-sm font-medium">
+                {Math.round(getProgressPercentage())}%
+              </span>
             </div>
-            <div className="w-full bg-white/20 rounded-full h-2">
-              <motion.div
-                className="bg-yellow-400 h-2 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${getProgressPercentage()}%` }}
-                transition={{ duration: 0.5 }}
-              />
-            </div>
+            <p className="text-white/60 text-sm">
+              Question {currentQuestionIndex + 1} of {questions.length}
+            </p>
           </div>
+          
+          {/* Login prompt - show every 3 questions */}
+          {!isAuthenticated && (currentQuestionIndex + 1) % 3 === 0 && (
+            <div className="ml-4">
+              <button
+                onClick={handleLogin}
+                className="flex items-center px-4 py-2 bg-white/10 text-white rounded-lg border border-white/20 hover:bg-white/20 transition-all"
+              >
+                <LogIn className="w-4 h-4 mr-2" />
+                Already a user? Login
+              </button>
+            </div>
+          )}
+        </div>
 
-          {/* Question */}
+        {/* Main quiz content */}
+        <div className="max-w-2xl mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
-              key={currentQuestion.id}
-              initial={{ opacity: 0, x: 50 }}
+              key={currentQuestionIndex}
+              initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
+              exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="bg-white/10 rounded-2xl p-8 backdrop-blur-sm border border-white/20"
             >
-              {/* Category Header */}
-              <div className="flex items-center mb-6">
-                {React.createElement(getCategoryIcon(currentQuestion.category), {
-                  className: "w-6 h-6 text-yellow-400 mr-3"
-                })}
-                <span className="text-yellow-400 font-semibold uppercase tracking-wide">
-                  {currentQuestion.category}
-                </span>
+              {/* Question header */}
+              <div className="mb-8">
+                <div className="flex items-center mb-4">
+                  {React.createElement(getCategoryIcon(currentQuestion.category), {
+                    className: "w-6 h-6 text-yellow-400 mr-3"
+                  })}
+                  <span className="text-yellow-400 font-medium uppercase tracking-wide text-sm">
+                    {currentQuestion.category}
+                  </span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                  {currentQuestion.question_text}
+                </h2>
               </div>
 
-              {/* Question Text */}
-              <h2 className="text-2xl font-bold text-white mb-8">
-                {currentQuestion.question_text}
-              </h2>
-
-              {/* Options */}
-              <div className="space-y-4">
+              {/* Question content */}
+              <div className="space-y-4 mb-8">
                 {currentQuestion.category === 'personal' ? (
-                  // Personal info input
                   <div className="space-y-4">
                     {currentQuestion.id === 'name' && (
                       <input
@@ -301,6 +337,22 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
               </div>
             </motion.div>
           </AnimatePresence>
+
+          {/* Login prompt at bottom - show for last few questions */}
+          {!isAuthenticated && currentQuestionIndex >= questions.length - 3 && (
+            <div className="text-center mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
+              <p className="text-white/80 mb-3">
+                Almost done! Sign in to save your progress and get your personalized plan.
+              </p>
+              <button
+                onClick={handleLogin}
+                className="flex items-center mx-auto px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 font-semibold rounded-lg hover:from-yellow-300 hover:to-yellow-400 transition-all"
+              >
+                <LogIn className="w-4 h-4 mr-2" />
+                Sign In to Continue
+              </button>
+            </div>
+          )}
 
           {/* Navigation */}
           <div className="flex justify-between mt-8">
