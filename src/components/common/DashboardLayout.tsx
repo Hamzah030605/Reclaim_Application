@@ -87,11 +87,11 @@ export default function DashboardLayout({
           const { data: streakData } = await supabase
             .from('streaks')
             .select('duration_days')
-            .eq('id', userProfile.current_streak_id)
+            .eq('id', (userProfile as any).current_streak_id)
             .single()
 
           if (streakData) {
-            currentStreak = streakData.duration_days || 0
+            currentStreak = (streakData as any).duration_days || 0
           }
         }
 

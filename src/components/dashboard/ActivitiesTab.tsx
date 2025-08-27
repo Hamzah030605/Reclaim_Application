@@ -94,7 +94,7 @@ export default function ActivitiesTab() {
         .lte('created_at', `${today}T23:59:59`)
 
       const completedIds = completedActivities?.map(activity => 
-        activity.encryption_key_id.replace('activity_', '')
+        (activity as any).encryption_key_id.replace('activity_', '')
       ) || []
 
       setActivities(allActivities.map(activity => ({

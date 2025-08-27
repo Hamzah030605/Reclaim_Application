@@ -89,7 +89,7 @@ export default function CommunityTab() {
       if (postsResult.success) {
         const likedPostIds = new Set()
         
-        postsResult.data.forEach(post => {
+        postsResult.data.forEach((post: any) => {
           if (post.is_liked_by_user) {
             likedPostIds.add(post.id)
           }
@@ -116,15 +116,15 @@ export default function CommunityTab() {
       if (profile) {
         // Get current streak
         let currentStreak = 0
-        if (profile.current_streak_id) {
+        if ((profile as any).current_streak_id) {
           const { data: streakData } = await supabase
             .from('streaks')
             .select('duration_days')
-            .eq('id', profile.current_streak_id)
+            .eq('id', (profile as any).current_streak_id)
             .single()
 
           if (streakData) {
-            currentStreak = streakData.duration_days || 0
+            currentStreak = (streakData as any).duration_days || 0
           }
         }
 
