@@ -1,6 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
 import { AlertCircle, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'

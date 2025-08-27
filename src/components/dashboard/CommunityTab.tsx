@@ -129,9 +129,9 @@ export default function CommunityTab() {
         }
 
         setUserProfile({
-          username: profile.username || 'User',
-          level: profile.level || 1,
-          xp: profile.xp || 0,
+          username: (profile as any).username || 'User',
+          level: (profile as any).level || 1,
+          xp: (profile as any).xp || 0,
           streak: currentStreak
         })
       }
@@ -157,7 +157,7 @@ export default function CommunityTab() {
         
         // Update liked posts state
         const likedPostIds = new Set()
-        result.data.forEach(post => {
+        result.data.forEach((post: any) => {
           if (post.is_liked_by_user) {
             likedPostIds.add(post.id)
           }
@@ -249,8 +249,8 @@ export default function CommunityTab() {
         })
 
         // Update the post's like count
-        setCommunityPosts(prevPosts => 
-          prevPosts.map(post => 
+        setCommunityPosts((prevPosts: any) => 
+          prevPosts.map((post: any) => 
             post.id === postId 
               ? { 
                   ...post, 
@@ -277,12 +277,12 @@ export default function CommunityTab() {
   }
 
   const toggleComments = async (postId: number) => {
-    const newShowComments = { ...showComments }
+    const newShowComments: any = { ...showComments }
     newShowComments[postId] = !newShowComments[postId]
     setShowComments(newShowComments)
 
     // Fetch comments if not already loaded
-    if (newShowComments[postId] && !comments[postId]) {
+    if (newShowComments[postId] && !(comments as any)[postId]) {
       try {
         const response = await fetch(`/api/community/posts/${postId}/comments`)
         const result = await response.json()
@@ -318,14 +318,14 @@ export default function CommunityTab() {
       
       if (result.success) {
         // Add the new comment to the list
-        setComments(prev => ({
+        setComments((prev: any) => ({
           ...prev,
           [postId]: [...(prev[postId] || []), result.data]
         }))
 
         // Update the post's comment count
-        setCommunityPosts(prevPosts => 
-          prevPosts.map(post => 
+        setCommunityPosts((prevPosts: any) => 
+          prevPosts.map((post: any) => 
             post.id === postId 
               ? { ...post, comment_count: (post.comment_count || 0) + 1 }
               : post
@@ -411,7 +411,7 @@ export default function CommunityTab() {
           <p className="text-secondary-text">Be the first to share your recovery journey!</p>
         </div>
       ) : (
-        communityPosts.map((post) => (
+        communityPosts.map((post: any) => (
           <div key={post.id} className="card">
             <div className="flex items-start space-x-3 mb-3">
               <div className="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center">
@@ -487,7 +487,7 @@ export default function CommunityTab() {
             </div>
 
             {/* Comments Section */}
-            {showComments[post.id] && (
+            {(showComments as any)[post.id] && (
               <div className="mt-4 border-t border-border-gray pt-4">
                 <h4 className="font-semibold text-primary-text mb-3">Comments</h4>
                 

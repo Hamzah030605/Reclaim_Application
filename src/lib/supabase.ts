@@ -269,6 +269,145 @@ export type Database = {
           updated_at?: string
         }
       }
+      urge_journals: {
+        Row: {
+          id: string
+          user_id: string
+          content: string
+          intensity: number
+          triggers: string[]
+          mood: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          content: string
+          intensity: number
+          triggers: string[]
+          mood: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          content?: string
+          intensity?: number
+          triggers?: string[]
+          mood?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      user_lessons: {
+        Row: {
+          id: string
+          user_id: string
+          lesson_id: string
+          completed_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          lesson_id: string
+          completed_at: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          lesson_id?: string
+          completed_at?: string
+          created_at?: string
+        }
+      }
+      user_checkins: {
+        Row: {
+          id: string
+          user_id: string
+          checkin_date: string
+          streak_count: number
+          xp_gained: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          checkin_date: string
+          streak_count: number
+          xp_gained: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          checkin_date?: string
+          streak_count?: number
+          xp_gained?: number
+          created_at?: string
+        }
+      }
+      user_achievements: {
+        Row: {
+          id: string
+          user_id: string
+          achievement_id: string
+          earned_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          achievement_id: string
+          earned_at: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          achievement_id?: string
+          earned_at?: string
+          created_at?: string
+        }
+      }
+      user_streaks: {
+        Row: {
+          id: string
+          user_id: string
+          start_date: string
+          end_date: string | null
+          duration_days: number
+          is_active: boolean
+          milestones_reached: string[]
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          start_date: string
+          end_date?: string | null
+          duration_days?: number
+          is_active?: boolean
+          milestones_reached?: string[]
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          start_date?: string
+          end_date?: string | null
+          duration_days?: number
+          is_active?: boolean
+          milestones_reached?: string[]
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
   }
 }
