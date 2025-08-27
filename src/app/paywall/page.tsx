@@ -209,7 +209,7 @@ export default function PaywallPage() {
         .from('users')
         .update({ 
           is_premium: true
-        })
+        } as any)
         .eq('id', user.id)
         .select()
 
