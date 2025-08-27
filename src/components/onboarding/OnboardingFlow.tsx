@@ -10,17 +10,23 @@ import AwarenessPages from './AwarenessPages'
 import ReclaimBenefits from './ReclaimBenefits'
 import SocialProof from './SocialProof'
 import RatingScreen from './RatingScreen'
+import WelcomeToReclaim from './WelcomeToReclaim'
+import InvestmentPage from './InvestmentPage'
+import CustomPlanPage from './CustomPlanPage'
+import EnhancedPaywall from './EnhancedPaywall'
 import CalAIOnboardingFlow from './CalAIOnboardingFlow'
 
-type OnboardingStep = 'quiz' | 'loading' | 'analysis' | 'symptoms' | 'awareness' | 'benefits' | 'socialproof' | 'rating' | 'calai'
+type OnboardingStep = 'quiz' | 'loading' | 'analysis' | 'symptoms' | 'awareness' | 'benefits' | 'socialproof' | 'rating' | 'welcome' | 'investment' | 'customplan' | 'paywall' | 'calai'
 
 export default function OnboardingFlow() {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('quiz')
   const [assessmentData, setAssessmentData] = useState<any>(null)
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([])
+  const [userName, setUserName] = useState<string>('')
 
   const handleQuizComplete = (data: any) => {
     setAssessmentData(data)
+    setUserName(data.name || 'User')
     setCurrentStep('loading')
   }
 
@@ -70,13 +76,34 @@ export default function OnboardingFlow() {
   }
 
   const handleRatingComplete = (rating: number, feedback: string) => {
-    // Here you could save the rating and feedback to your database
     console.log('User rating:', rating, 'Feedback:', feedback)
-    setCurrentStep('calai')
+    setCurrentStep('welcome')
   }
 
   const handleRatingSkip = () => {
+    setCurrentStep('welcome')
+  }
+
+  const handleWelcomeComplete = () => {
+    setCurrentStep('investment')
+  }
+
+  const handleInvestmentComplete = () => {
+    setCurrentStep('customplan')
+  }
+
+  const handleCustomPlanComplete = () => {
+    setCurrentStep('paywall')
+  }
+
+  const handlePaywallSubscribe = (plan: 'monthly' | 'yearly') => {
+    console.log('User selected plan:', plan)
+    // Here you would handle the subscription
     setCurrentStep('calai')
+  }
+
+  const handlePaywallBack = () => {
+    setCurrentStep('customplan')
   }
 
   return (
@@ -188,6 +215,61 @@ export default function OnboardingFlow() {
             <RatingScreen 
               onComplete={handleRatingComplete}
               onSkip={handleRatingSkip}
+            />
+          </motion.div>
+        )}
+
+        {currentStep === 'welcome' && (
+          <motion.div
+            key="welcome"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <WelcomeToReclaim 
+              onContinue={handleWelcomeComplete}
+            />
+          </motion.div>
+        )}
+
+        {currentStep === 'investment' && (
+          <motion.div
+            key="investment"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <InvestmentPage 
+              onContinue={handleInvestmentComplete}
+            />
+          </motion.div>
+        )}
+
+        {currentStep === 'customplan' && (
+          <motion.div
+            key="customplan"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <CustomPlanPage 
+              userName={userName}
+              assessmentData={assessmentData}
+              onContinue={handleCustomPlanComplete}
+            />
+          </motion.div>
+        )}
+
+        {currentStep === 'paywall' && (
+          <motion.div
+            key="paywall"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <EnhancedPaywall 
+              onSubscribe={handlePaywallSubscribe}
+              onBack={handlePaywallBack}
             />
           </motion.div>
         )}
