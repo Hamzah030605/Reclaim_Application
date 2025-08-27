@@ -16,6 +16,8 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['@supabase/supabase-js'],
   },
+  // Disable static generation for all pages
+  output: 'standalone',
 }
 
 module.exports = nextConfig
