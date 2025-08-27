@@ -114,10 +114,13 @@ export async function PUT(request: NextRequest) {
     // End the streak
     const endedStreak = await streakDb.endStreak(activeStreak.id)
 
+    // Get current user data from database
+    const currentUser = await userDb.getById(user.id)
+    
     // Update user's current streak reference
     await userDb.update(user.id, {
       current_streak_id: null,
-      total_relapses: user.total_relapses + 1
+      total_relapses: (currentUser?.total_relapses || 0) + 1
     })
 
     return NextResponse.json({
