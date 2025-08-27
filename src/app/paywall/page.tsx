@@ -205,17 +205,17 @@ export default function PaywallPage() {
       }
       
       // Update user to premium
-      const { data: updateData, error } = await supabase
+      const { data: updateData, error } = await (supabase as any)
         .from('users')
         .update({ 
           is_premium: true
-        } as any)
+        })
         .eq('id', user.id)
         .select()
 
       if (!error) {
         // Also create a subscription record
-        const { error: subscriptionError } = await supabase
+        const { error: subscriptionError } = await (supabase as any)
           .from('subscriptions')
           .insert({
             user_id: user.id,

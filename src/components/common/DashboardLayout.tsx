@@ -83,7 +83,7 @@ export default function DashboardLayout({
         // Get current streak data
         let currentStreak = 0
 
-        if (userProfile.current_streak_id) {
+        if ((userProfile as any).current_streak_id) {
           const { data: streakData } = await supabase
             .from('streaks')
             .select('duration_days')
@@ -97,7 +97,7 @@ export default function DashboardLayout({
 
         setUserStats({
           currentStreak,
-          username: userProfile.username || 'User'
+          username: (userProfile as any).username || 'User'
         })
 
         // Check if user should get automatic check-in
