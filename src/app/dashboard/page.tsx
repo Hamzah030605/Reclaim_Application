@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/common/DashboardLayout'
 import HomeTab from '@/components/dashboard/HomeTab'
 import CommunityTab from '@/components/dashboard/CommunityTab'
@@ -11,6 +12,7 @@ import AICoachTab from '@/components/dashboard/AICoachTab'
 import { supabase } from '@/lib/supabase'
 
 export default function DashboardPage() {
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState('home')
   const [userStats, setUserStats] = useState<any>(null)
 
