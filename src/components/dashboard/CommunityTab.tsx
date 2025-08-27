@@ -9,7 +9,9 @@ import {
   MessageCircle, 
   TrendingUp,
   Crown,
-  Plus
+  Plus,
+  Trash2,
+  MoreVertical
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { LevelBadge } from '@/components/common/LevelDisplay'
@@ -42,6 +44,7 @@ export default function CommunityTab() {
   const [showCreatePost, setShowCreatePost] = useState(false)
   const [newPostContent, setNewPostContent] = useState('')
   const [userProfile, setUserProfile] = useState({ username: '', level: 1, xp: 0, streak: 0 })
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [communityPosts, setCommunityPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [showComments, setShowComments] = useState({})
@@ -50,6 +53,7 @@ export default function CommunityTab() {
   const [commentingPostId, setCommentingPostId] = useState(null)
   const [likedPosts, setLikedPosts] = useState(new Set())
   const [likeLoading, setLikeLoading] = useState(new Set())
+  const [deleteLoading, setDeleteLoading] = useState(new Set())
   const likeLoadingRef = useRef(new Set())
 
   // Mock data - in real app, this would come from API
@@ -106,6 +110,8 @@ export default function CommunityTab() {
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
+
+      setCurrentUserId(user.id)
 
       const { data: profile } = await supabase
         .from('users')
@@ -340,6 +346,65 @@ export default function CommunityTab() {
     }
   }
 
+  const deletePost = async (postId: number) => {
+    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+      return
+    }
+
+    try {
+      setDeleteLoading(prev => new Set(prev).add(postId))
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      const response = await fetch(`/api/community/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${session?.access_token}`
+        }
+      })
+
+      const result = await response.json()
+      
+      if (result.success) {
+        // Remove the post from the list
+        setCommunityPosts((prevPosts: any) => 
+          prevPosts.filter((post: any) => post.id !== postId)
+        )
+        
+        // Remove from liked posts if it was there
+        setLikedPosts(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(postId)
+          return newSet
+        })
+        
+        // Remove comments for this post
+        setComments(prev => {
+          const newComments = { ...prev }
+          delete newComments[postId]
+          return newComments
+        })
+        
+        // Remove from show comments
+        setShowComments(prev => {
+          const newShowComments = { ...prev }
+          delete newShowComments[postId]
+          return newShowComments
+        })
+      } else {
+        alert('Failed to delete post: ' + (result.error || 'Unknown error'))
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error)
+      alert('Failed to delete post. Please try again.')
+    } finally {
+      setDeleteLoading(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(postId)
+        return newSet
+      })
+    }
+  }
+
   const renderFeed = () => (
     <div className="space-y-4">
       {/* Create Post Button */}
@@ -420,13 +485,32 @@ export default function CommunityTab() {
                 </span>
               </div>
               <div className="flex-1">
-                <div className="flex items-center space-x-2">
-                  <span className="font-semibold text-primary-text">{post.user.username}</span>
-                  <LevelBadge level={post.user.level} size="sm" />
-                  {post.user_streak && (
-                    <span className="text-xs bg-success-green text-white px-2 py-1 rounded-full">
-                      {post.user_streak.duration_days} days
-                    </span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className="font-semibold text-primary-text">{post.user.username}</span>
+                    <LevelBadge level={post.user.level} size="sm" />
+                    {post.user_streak && (
+                      <span className="text-xs bg-success-green text-white px-2 py-1 rounded-full">
+                        {post.user_streak.duration_days} days
+                      </span>
+                    )}
+                  </div>
+                  {/* Delete button - only show for user's own posts */}
+                  {currentUserId === post.user_id && (
+                    <div className="relative">
+                      <button
+                        onClick={() => deletePost(post.id)}
+                        disabled={deleteLoading.has(post.id)}
+                        className="p-1 text-secondary-text hover:text-panic-red transition-colors disabled:opacity-50"
+                        title="Delete post"
+                      >
+                        {deleteLoading.has(post.id) ? (
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
                   )}
                 </div>
                 <span className="text-sm text-secondary-text">{formatTimeAgo(post.created_at)}</span>
