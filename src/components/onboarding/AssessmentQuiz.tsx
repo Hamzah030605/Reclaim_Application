@@ -229,22 +229,22 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-brand-blue to-brand-blue-dark">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4 sm:py-8">
         {/* Header with progress */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-6 sm:mb-8">
           <div className="flex-1">
             <div className="flex items-center mb-2">
-              <div className="w-full bg-white/20 rounded-full h-2 mr-4">
+              <div className="w-full bg-white/20 rounded-full h-2 mr-3 sm:mr-4">
                 <div 
                   className="bg-gradient-to-r from-yellow-400 to-yellow-500 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${getProgressPercentage()}%` }}
                 ></div>
               </div>
-              <span className="text-white text-sm font-medium">
+              <span className="text-white text-xs sm:text-sm font-medium">
                 {Math.round(getProgressPercentage())}%
               </span>
             </div>
-            <p className="text-white/60 text-sm">
+            <p className="text-white/60 text-xs sm:text-sm">
               Question {currentQuestionIndex + 1} of {questions.length}
             </p>
           </div>
@@ -261,31 +261,31 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
               transition={{ duration: 0.3 }}
             >
               {/* Question header */}
-              <div className="mb-8">
-                <div className="flex items-center mb-4">
+              <div className="mb-6 sm:mb-8">
+                <div className="flex items-center mb-3 sm:mb-4">
                   {React.createElement(getCategoryIcon(currentQuestion.category), {
-                    className: "w-6 h-6 text-yellow-400 mr-3"
+                    className: "w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 mr-2 sm:mr-3"
                   })}
-                  <span className="text-yellow-400 font-medium uppercase tracking-wide text-sm">
+                  <span className="text-yellow-400 font-medium uppercase tracking-wide text-xs sm:text-sm">
                     {currentQuestion.category}
                   </span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
                   {currentQuestion.question_text}
                 </h2>
               </div>
 
               {/* Question content */}
-              <div className="space-y-4 mb-8">
+              <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                 {currentQuestion.category === 'personal' ? (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {currentQuestion.id === 'name' && (
                       <input
                         type="text"
                         value={personalInfo.name}
                         onChange={(e) => handlePersonalInfoChange('name', e.target.value)}
                         placeholder="Enter your name"
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-yellow-400"
+                        className="w-full px-3 sm:px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-yellow-400 text-base"
                       />
                     )}
                     {currentQuestion.id === 'age' && (
@@ -294,7 +294,7 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
                         value={personalInfo.age}
                         onChange={(e) => handlePersonalInfoChange('age', e.target.value)}
                         placeholder="Enter your age"
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-yellow-400"
+                        className="w-full px-3 sm:px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-yellow-400 text-base"
                       />
                     )}
                   </div>
@@ -311,19 +311,19 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleResponse(option.value, option.text)}
-                        className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
+                        className={`w-full p-3 sm:p-4 rounded-lg border-2 transition-all text-left touch-target ${
                           isSelected
                             ? 'border-yellow-400 bg-yellow-400/20 text-white'
                             : 'border-white/20 bg-white/5 text-white hover:border-white/40'
                         }`}
                       >
                         <div className="flex items-center">
-                          <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
+                          <div className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 mr-2 sm:mr-3 flex items-center justify-center ${
                             isSelected ? 'border-yellow-400 bg-yellow-400' : 'border-white/40'
                           }`}>
-                            {isSelected && <CheckCircle className="w-3 h-3 text-white" />}
+                            {isSelected && <CheckCircle className="w-2 h-2 sm:w-3 sm:h-3 text-white" />}
                           </div>
-                          <span className="font-medium">{option.text}</span>
+                          <span className="font-medium text-sm sm:text-base">{option.text}</span>
                         </div>
                       </motion.button>
                     )
@@ -334,15 +334,15 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
           </AnimatePresence>
 
           {/* Navigation */}
-          <div className="flex justify-between mt-8">
+          <div className="flex justify-between mt-6 sm:mt-8">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={previousQuestion}
               disabled={currentQuestionIndex === 0}
-              className="px-6 py-3 bg-white/10 text-white rounded-lg border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              className="px-4 sm:px-6 py-2 sm:py-3 bg-white/10 text-white rounded-lg border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm sm:text-base touch-target"
             >
-              <ChevronLeft className="w-5 h-5 mr-2" />
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
               Previous
             </motion.button>
 
@@ -352,17 +352,17 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
                 whileTap={{ scale: 0.95 }}
                 onClick={handleSubmit}
                 disabled={!canProceed() || submitting}
-                className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm sm:text-base touch-target"
               >
                 {submitting ? (
                   <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-yellow-900 mr-2"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-yellow-900 mr-1 sm:mr-2"></div>
                     Submitting...
                   </>
                 ) : (
                   <>
                     Complete Assessment
-                    <CheckCircle className="w-5 h-5 ml-2" />
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 ml-1 sm:ml-2" />
                   </>
                 )}
               </motion.button>
@@ -372,10 +372,10 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
                 whileTap={{ scale: 0.95 }}
                 onClick={nextQuestion}
                 disabled={!canProceed()}
-                className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm sm:text-base touch-target"
               >
                 Next
-                <ChevronRight className="w-5 h-5 ml-2" />
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1 sm:ml-2" />
               </motion.button>
             )}
           </div>

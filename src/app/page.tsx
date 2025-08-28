@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase'
 import OnboardingFlow from '@/components/onboarding/OnboardingFlow'
 import Hero from '@/components/common/Hero'
 import PreOnboarding from '@/components/onboarding/PreOnboarding'
+import HashHandler from './auth/hash-handler'
 
 export default function HomePage() {
   const router = useRouter()
@@ -23,7 +24,7 @@ export default function HomePage() {
         console.log('OAuth tokens detected in URL fragment, redirecting to callback...')
         // Redirect to the proper callback route with the tokens
         const hashFragment = url.split('#')[1]
-        router.push(`/auth/callback#${hashFragment}`)
+        window.location.href = `/auth/callback#${hashFragment}`
         return
       }
     }
@@ -69,9 +70,9 @@ export default function HomePage() {
             console.log('Auth check - Redirecting to dashboard (completed onboarding)')
             router.push('/dashboard')
           } else {
-            // User is authenticated but hasn't completed onboarding
-            console.log('Auth check - Redirecting to onboarding')
-            router.push('/onboarding')
+            // User is authenticated but hasn't completed onboarding - show landing page instead of auto-redirecting
+            console.log('Auth check - User not premium, showing home page')
+            setLoading(false)
           }
         } else {
           // User exists but no profile or error, show home page (don't redirect to onboarding)
@@ -131,7 +132,7 @@ export default function HomePage() {
         {/* Login button overlay */}
         <button
           onClick={handleLogin}
-          className="absolute top-4 right-4 px-4 py-2 bg-white/10 text-white rounded-lg border border-white/20 hover:bg-white/20 transition-all"
+          className="absolute top-2 sm:top-4 right-2 sm:right-4 px-3 sm:px-4 py-2 bg-white/20 text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all text-sm sm:text-base z-10 font-medium"
         >
           Login
         </button>
@@ -146,7 +147,7 @@ export default function HomePage() {
         {/* Login button overlay */}
         <button
           onClick={handleLogin}
-          className="absolute top-4 right-4 px-4 py-2 bg-white/10 text-white rounded-lg border border-white/20 hover:bg-white/20 transition-all z-50"
+          className="absolute top-2 sm:top-4 right-2 sm:right-4 px-3 sm:px-4 py-2 bg-white/20 text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all z-50 text-sm sm:text-base font-medium"
         >
           Login
         </button>
@@ -156,19 +157,20 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-bg">
+      <HashHandler />
       <div className="relative">
         <Hero onGetStarted={handleGetStarted} />
         {/* Login button overlay */}
         <button
           onClick={handleLogin}
-          className="absolute top-4 right-4 px-4 py-2 bg-white/10 text-white rounded-lg border border-white/20 hover:bg-white/20 transition-all"
+          className="absolute top-2 sm:top-4 right-2 sm:right-4 px-3 sm:px-4 py-2 bg-white/20 text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all text-sm sm:text-base z-10 font-medium"
         >
           Login
         </button>
         {/* Temporary logout button for testing */}
         <button
           onClick={handleLogout}
-          className="absolute top-4 left-4 px-4 py-2 bg-red-500/20 text-red-300 rounded-lg border border-red-300/20 hover:bg-red-500/30 transition-all"
+          className="absolute top-2 sm:top-4 left-2 sm:left-4 px-3 sm:px-4 py-2 bg-red-500/20 text-red-300 rounded-lg border border-red-300/20 hover:bg-red-500/30 transition-all text-sm sm:text-base"
         >
           Logout (Test)
         </button>

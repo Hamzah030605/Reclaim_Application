@@ -15,35 +15,35 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-brand-blue hover:bg-brand-blue/90 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200;
+    @apply bg-brand-blue hover:bg-brand-blue/90 text-white font-medium py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors duration-200 text-sm sm:text-base;
   }
   
   .btn-secondary {
-    @apply bg-subtle-gray hover:bg-border-gray text-primary-text font-medium py-3 px-6 rounded-lg transition-colors duration-200;
+    @apply bg-subtle-gray hover:bg-border-gray text-primary-text font-medium py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors duration-200 text-sm sm:text-base;
   }
   
   .btn-success {
-    @apply bg-success-green hover:bg-success-green/90 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200;
+    @apply bg-success-green hover:bg-success-green/90 text-white font-medium py-2 sm:py-3 px-4 sm:px-6 rounded-lg transition-colors duration-200 text-sm sm:text-base;
   }
   
   .btn-panic {
-    @apply bg-panic-red hover:bg-panic-red/90 text-white font-bold py-4 px-8 rounded-full transition-all duration-200 shadow-lg hover:shadow-xl;
+    @apply bg-panic-red hover:bg-panic-red/90 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full transition-all duration-200 shadow-lg hover:shadow-xl text-base sm:text-lg;
   }
   
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-border-gray/30 p-6;
+    @apply bg-white rounded-xl shadow-sm border border-border-gray/30 p-4 sm:p-6;
   }
   
   .input-field {
-    @apply w-full px-4 py-3 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent;
+    @apply w-full px-3 sm:px-4 py-3 border border-border-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent text-base;
   }
   
   .streak-display {
-    @apply text-4xl font-bold text-success-green;
+    @apply text-3xl sm:text-4xl font-bold text-success-green;
   }
   
   .xp-display {
-    @apply text-lg font-semibold text-achievement-gold;
+    @apply text-base sm:text-lg font-semibold text-achievement-gold;
   }
   
   .level-progress-bar {
@@ -59,6 +59,19 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  
+  /* Mobile-specific utilities */
+  .mobile-safe-area {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  /* Touch-friendly button sizes */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
   }
 }
 

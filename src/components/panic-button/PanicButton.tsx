@@ -21,16 +21,16 @@ export default function PanicButton() {
     <>
       <motion.button
         onClick={handlePanicClick}
-        className="btn-panic relative group"
+        className="btn-panic relative group w-full sm:w-auto"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="flex items-center space-x-3">
-          <AlertTriangle className="w-8 h-8" />
-          <span className="text-xl">PANIC BUTTON</span>
+        <div className="flex items-center justify-center space-x-2 sm:space-x-3">
+          <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8" />
+          <span className="text-lg sm:text-xl font-bold">PANIC BUTTON</span>
         </div>
         
         {/* Pulsing ring animation */}
@@ -48,7 +48,7 @@ export default function PanicButton() {
         />
       </motion.button>
 
-      <p className="text-sm text-secondary-text mt-3 max-w-xs">
+      <p className="text-xs sm:text-sm text-secondary-text mt-3 max-w-xs mx-auto text-center">
         Feeling an urge? Tap the panic button for immediate support and intervention.
       </p>
 

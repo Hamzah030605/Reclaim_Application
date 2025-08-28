@@ -239,36 +239,36 @@ export default function DashboardLayout({
       
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-border-gray">
-        <div className="max-w-6xl mx-auto px-4 py-4">
+        <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Zap className="w-8 h-8 text-achievement-gold" />
-              <h1 className="text-2xl font-bold text-primary-text">Reclaim</h1>
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-achievement-gold" />
+              <h1 className="text-lg sm:text-2xl font-bold text-primary-text">Reclaim</h1>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 {loading ? (
                   <div className="animate-pulse">
-                    <div className="w-8 h-8 bg-gray-300 rounded"></div>
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-300 rounded"></div>
                   </div>
                 ) : (
                   <>
-                    <span className="streak-display">{userStats.currentStreak}</span>
-                    <span className="text-secondary-text">days</span>
+                    <span className="text-2xl sm:text-4xl font-bold text-success-green">{userStats.currentStreak}</span>
+                    <span className="text-xs sm:text-sm text-secondary-text">days</span>
                   </>
                 )}
               </div>
-              <div className="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-brand-blue rounded-full flex items-center justify-center">
+                <span className="text-white text-xs sm:text-sm font-medium">
                   {userStats.username.charAt(0).toUpperCase()}
                 </span>
               </div>
               <button
                 onClick={handleLogout}
-                className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition-colors"
+                className="w-6 h-6 sm:w-8 sm:h-8 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition-colors"
                 title="Logout"
               >
-                <LogOut className="w-5 h-5" />
+                <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>
@@ -276,26 +276,26 @@ export default function DashboardLayout({
       </header>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 py-6">
+      <main className="max-w-6xl mx-auto px-4 py-4 sm:py-6 pb-24 sm:pb-6">
         {children}
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-border-gray">
-        <div className="max-w-6xl mx-auto px-4">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-border-gray z-40">
+        <div className="max-w-6xl mx-auto px-2 sm:px-4">
           <div className="flex items-center justify-around py-2">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex flex-col items-center py-2 px-4 transition-colors ${
+                className={`flex flex-col items-center py-2 px-2 sm:px-4 transition-colors min-w-0 ${
                   activeTab === tab.id
                     ? 'text-brand-blue'
                     : 'text-secondary-text hover:text-primary-text'
                 }`}
               >
-                <tab.icon className="w-6 h-6 mb-1" />
-                <span className="text-xs">{tab.label}</span>
+                <tab.icon className="w-5 h-5 sm:w-6 sm:h-6 mb-1" />
+                <span className="text-xs truncate">{tab.label}</span>
               </button>
             ))}
           </div>
@@ -303,7 +303,7 @@ export default function DashboardLayout({
       </nav>
 
       {/* Spacer for fixed nav */}
-      <div className="h-20"></div>
+      <div className="h-16 sm:h-20"></div>
     </div>
   )
 }

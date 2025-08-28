@@ -111,7 +111,7 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Streak Display */}
       <div className="card text-center">
         <motion.div
@@ -119,10 +119,10 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <Flame className="w-16 h-16 text-achievement-gold mx-auto mb-4" />
-          <h2 className="text-2xl font-semibold text-primary-text mb-2">Current Streak</h2>
-          <div className="streak-display mb-4">{userStats.currentStreak}</div>
-          <p className="text-secondary-text">
+          <Flame className="w-12 h-12 sm:w-16 sm:h-16 text-achievement-gold mx-auto mb-3 sm:mb-4" />
+          <h2 className="text-xl sm:text-2xl font-semibold text-primary-text mb-2">Current Streak</h2>
+          <div className="text-3xl sm:text-4xl font-bold text-success-green mb-3 sm:mb-4">{userStats.currentStreak}</div>
+          <p className="text-sm sm:text-base text-secondary-text">
             Your longest streak: {userStats.longestStreak} days
           </p>
         </motion.div>
@@ -137,14 +137,14 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
       <div className="card">
         <div className="text-center">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-community-blue to-brand-blue rounded-full flex items-center justify-center mr-3">
-              <Star className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-community-blue to-brand-blue rounded-full flex items-center justify-center mr-3">
+              <Star className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div className="text-left">
-              <div className="text-2xl font-bold text-primary-text">
+              <div className="text-lg sm:text-2xl font-bold text-primary-text">
                 {getLevelInfo(userStats.level).name}
               </div>
-              <div className="text-sm text-secondary-text">
+              <div className="text-xs sm:text-sm text-secondary-text">
                 Level {userStats.level} • {userStats.xp} XP
               </div>
             </div>
@@ -152,13 +152,13 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
           
           {/* Progress Bar */}
           <div className="mb-3">
-            <div className="flex justify-between text-sm text-secondary-text mb-2">
+            <div className="flex justify-between text-xs sm:text-sm text-secondary-text mb-2">
               <span>Progress to next level</span>
               <span>{getProgressToNextLevel(userStats.xp, userStats.level).toFixed(1)}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+            <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3 overflow-hidden">
               <div 
-                className="h-3 rounded-full level-progress-bar"
+                className="h-2 sm:h-3 rounded-full level-progress-bar"
                 style={{ 
                   width: `${getProgressToNextLevel(userStats.xp, userStats.level)}%`,
                   background: `linear-gradient(90deg, ${getLevelColor(userStats.level)}, ${getLevelColor(userStats.level)}dd)`
@@ -168,7 +168,7 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
             <div className="flex justify-between text-xs text-secondary-text mt-1">
               <span>{userStats.xp} XP</span>
               {getNextLevelInfo(userStats.level) && (
-                <span>{getNextLevelInfo(userStats.level)?.name} in {getNextLevelInfo(userStats.level)?.xpRequired - userStats.xp} XP</span>
+                <span className="hidden sm:inline">{getNextLevelInfo(userStats.level)?.name} in {getNextLevelInfo(userStats.level)?.xpRequired - userStats.xp} XP</span>
               )}
             </div>
           </div>
@@ -176,16 +176,16 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <div className="card text-center">
-          <Trophy className="w-8 h-8 text-achievement-gold mx-auto mb-2" />
-          <div className="xp-display">{userStats.xp} XP</div>
-          <p className="text-sm text-secondary-text">Total Experience</p>
+          <Trophy className="w-6 h-6 sm:w-8 sm:h-8 text-achievement-gold mx-auto mb-2" />
+          <div className="text-lg sm:text-xl font-semibold text-achievement-gold">{userStats.xp} XP</div>
+          <p className="text-xs sm:text-sm text-secondary-text">Total Experience</p>
         </div>
         <div className="card text-center">
-          <Target className="w-8 h-8 text-success-green mx-auto mb-2" />
-          <div className="text-2xl font-bold text-success-green">{userStats.currentStreak}</div>
-          <p className="text-sm text-secondary-text">Day Streak</p>
+          <Target className="w-6 h-6 sm:w-8 sm:h-8 text-success-green mx-auto mb-2" />
+          <div className="text-lg sm:text-2xl font-bold text-success-green">{userStats.currentStreak}</div>
+          <p className="text-xs sm:text-sm text-secondary-text">Day Streak</p>
         </div>
       </div>
 

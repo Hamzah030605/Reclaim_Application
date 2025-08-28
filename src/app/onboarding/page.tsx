@@ -8,28 +8,17 @@ import OnboardingFlow from '@/components/onboarding/OnboardingFlow'
 export default function OnboardingPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
-  const [authenticated, setAuthenticated] = useState(false)
 
   useEffect(() => {
-    checkAuth()
+    setLoading(false)
   }, [])
 
-  const checkAuth = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      
-      if (session?.user) {
-        setAuthenticated(true)
-      } else {
-        // Redirect to login if not authenticated
-        router.push('/auth/login')
-      }
-    } catch (error) {
-      console.error('Error checking auth:', error)
-      router.push('/auth/login')
-    } finally {
-      setLoading(false)
-    }
+  const handleLogin = () => {
+    router.push('/auth/login')
+  }
+
+  const handleGoHome = () => {
+    router.push('/')
   }
 
   if (loading) {
@@ -43,9 +32,23 @@ export default function OnboardingPage() {
     )
   }
 
-  if (!authenticated) {
-    return null
-  }
-
-  return <OnboardingFlow />
+  return (
+    <div className="relative">
+      <OnboardingFlow />
+      {/* Login button overlay */}
+      <button
+        onClick={handleLogin}
+        className="absolute top-2 sm:top-4 right-2 sm:right-4 px-3 sm:px-4 py-2 bg-white/20 text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all text-sm sm:text-base z-50 font-medium"
+      >
+        Login
+      </button>
+      {/* Home button overlay */}
+      <button
+        onClick={handleGoHome}
+        className="absolute top-2 sm:top-4 left-2 sm:left-4 px-3 sm:px-4 py-2 bg-white/20 text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all text-sm sm:text-base z-50 font-medium"
+      >
+        Home
+      </button>
+    </div>
+  )
 }

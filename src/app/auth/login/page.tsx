@@ -97,8 +97,10 @@ export default function LoginPage() {
 
       if (error) {
         setError(error.message)
+      } else if (data.url) {
+        // Redirect to the OAuth URL
+        window.location.href = data.url
       }
-      // The redirect will happen automatically
     } catch (err) {
       setError('An unexpected error occurred with Google sign-in')
     } finally {
@@ -107,17 +109,17 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center px-4 py-4">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Continue your recovery journey where you left off</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+          <p className="text-sm sm:text-base text-gray-600">Continue your recovery journey where you left off</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <form onSubmit={handleLogin} className="space-y-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8">
+          <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+              <div className="bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-3 rounded-md text-sm">
                 {error}
               </div>
             )}
@@ -132,7 +134,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-base"
                 placeholder="Enter your email"
               />
             </div>
@@ -147,7 +149,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-base"
                 placeholder="Enter your password"
               />
             </div>
@@ -155,7 +157,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-semibold flex items-center justify-center space-x-2"
+              className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-semibold flex items-center justify-center space-x-2 text-base"
             >
               {loading ? (
                 <>
@@ -185,7 +187,7 @@ export default function LoginPage() {
               type="button"
               onClick={handleGoogleLogin}
               disabled={googleLoading}
-              className="mt-4 w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2"
+              className="mt-4 w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2 text-base"
             >
               <Chrome className="w-5 h-5" />
               <span>{googleLoading ? 'Signing in...' : 'Sign in with Google'}</span>

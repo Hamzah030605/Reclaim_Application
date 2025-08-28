@@ -54,42 +54,42 @@ export default function PanicInterventionModal({ onClose }: PanicInterventionMod
 
   const CurrentIntervention = interventions[currentStep].component
 
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
-        className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl max-w-md w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border-gray">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-panic-red/10 rounded-full flex items-center justify-center">
-                          {(() => {
-              const IconComponent = interventions[currentStep].icon
-              return <IconComponent className="w-5 h-5 text-panic-red" />
-            })()}
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border-gray">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-panic-red/10 rounded-full flex items-center justify-center">
+              {(() => {
+                const IconComponent = interventions[currentStep].icon
+                return <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 text-panic-red" />
+              })()}
             </div>
             <div>
-              <h3 className="font-semibold text-primary-text">
+              <h3 className="text-sm sm:text-base font-semibold text-primary-text">
                 {interventions[currentStep].title}
               </h3>
-              <p className="text-sm text-secondary-text">
+              <p className="text-xs sm:text-sm text-secondary-text">
                 Step {currentStep + 1} of {interventions.length}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center text-secondary-text hover:text-primary-text"
+            className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-secondary-text hover:text-primary-text"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <CurrentIntervention onNext={handleNext} onSkip={handleSkip} />
         </div>
       </motion.div>

@@ -56,16 +56,16 @@ export default function Notification({ message, type, isVisible, onClose }: Noti
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -50, scale: 0.9 }}
           transition={{ duration: 0.3 }}
-          className={`fixed top-4 right-4 z-50 max-w-sm w-full p-4 rounded-lg border shadow-lg ${getBackgroundColor()}`}
+          className={`fixed top-4 left-4 right-4 sm:left-auto sm:right-4 z-50 max-w-sm sm:w-full mx-auto sm:mx-0 p-3 sm:p-4 rounded-lg border shadow-lg ${getBackgroundColor()}`}
         >
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
             {getIcon()}
-            <span className="flex-1 text-sm font-medium">{message}</span>
+            <span className="flex-1 text-xs sm:text-sm font-medium">{message}</span>
             <button
               onClick={onClose}
-              className="text-current hover:opacity-70 transition-opacity"
+              className="text-current hover:opacity-70 transition-opacity flex-shrink-0"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3 h-3 sm:w-4 sm:h-4" />
             </button>
           </div>
         </motion.div>
