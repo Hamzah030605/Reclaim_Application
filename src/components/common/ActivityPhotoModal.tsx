@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Camera, X, Upload, RotateCcw, Check } from 'lucide-react'
+import { Camera, X, Upload, RotateCcw, Check, FlipHorizontal } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 interface ActivityPhotoModalProps {
@@ -25,6 +25,7 @@ export default function ActivityPhotoModal({
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [error, setError] = useState('')
+  const [isFrontCamera, setIsFrontCamera] = useState(true)
   
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -37,12 +38,19 @@ export default function ActivityPhotoModal({
     return () => {
       stopCamera()
     }
-  }, [isOpen])
+  }, [isOpen, isFrontCamera])
 
   const startCamera = async () => {
     try {
+      // Stop existing stream first
+      stopCamera()
+      
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
+        video: { 
+          facingMode: isFrontCamera ? 'user' : 'environment',
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        }
       })
       
       if (videoRef.current) {
@@ -60,6 +68,10 @@ export default function ActivityPhotoModal({
       streamRef.current.getTracks().forEach(track => track.stop())
       streamRef.current = null
     }
+  }
+
+  const flipCamera = () => {
+    setIsFrontCamera(!isFrontCamera)
   }
 
   const capturePhoto = () => {
@@ -198,10 +210,22 @@ export default function ActivityPhotoModal({
                   playsInline
                   className="w-full h-full object-cover"
                 />
+                
+                {/* Camera Flip Button */}
+                <button
+                  onClick={flipCamera}
+                  className="absolute top-3 right-3 p-2 bg-black/50 backdrop-blur-sm rounded-full hover:bg-black/70 transition-colors"
+                >
+                  <FlipHorizontal size={20} className="text-white" />
+                </button>
+                
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center text-gray-500">
                     <Camera size={48} className="mx-auto mb-2" />
-                    <p className="text-sm">Position your camera</p>
+                    <p className="text-sm">
+                      {isFrontCamera ? 'Selfie Mode' : 'Back Camera'}
+                    </p>
+                    <p className="text-xs mt-1">Tap the flip button to switch</p>
                   </div>
                 </div>
               </div>

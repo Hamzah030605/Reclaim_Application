@@ -460,6 +460,9 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
         onClose={() => setShowUrgeJournal(false)}
         onSave={() => setRefreshJournalHistory(prev => prev + 1)}
       />
+
+      {/* Camera Modal */}
+      {/* Removed CameraComponent as it's no longer used */}
     </div>
   )
 }
