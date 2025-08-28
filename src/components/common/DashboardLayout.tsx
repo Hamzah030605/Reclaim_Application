@@ -72,16 +72,32 @@ export default function DashboardLayout({
         return
       }
 
+      // Fetch user profile with all necessary fields
       const { data: userProfile } = await supabase
         .from('users')
-        .select('username, current_streak')
+        .select('username, current_streak_id')
         .eq('id', user.id)
         .single()
 
       if (userProfile) {
+        // Get current streak data
+        let currentStreak = 0
+
+        if ((userProfile as any).current_streak_id) {
+          const { data: streakData } = await supabase
+            .from('streaks')
+            .select('duration_days')
+            .eq('id', (userProfile as any).current_streak_id)
+            .single()
+
+          if (streakData) {
+            currentStreak = (streakData as any).duration_days || 0
+          }
+        }
+
         setUserStats({
-          currentStreak: userProfile.current_streak || 0,
-          username: userProfile.username || 'User'
+          currentStreak,
+          username: (userProfile as any).username || 'User'
         })
       }
     } catch (error) {

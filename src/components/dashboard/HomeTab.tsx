@@ -51,6 +51,7 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
+      // Fetch user profile with all necessary fields
       const { data: userProfile } = await supabase
         .from('users')
         .select('*')
@@ -58,11 +59,40 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
         .single()
 
       if (userProfile) {
+        // Get current streak data
+        let currentStreak = 0
+        let longestStreak = 0
+
+        if ((userProfile as any).current_streak_id) {
+          const { data: streakData } = await supabase
+            .from('streaks')
+            .select('duration_days')
+            .eq('id', (userProfile as any).current_streak_id)
+            .single()
+
+          if (streakData) {
+            currentStreak = (streakData as any).duration_days || 0
+          }
+        }
+
+        // Get longest streak
+        const { data: longestStreakData } = await supabase
+          .from('streaks')
+          .select('duration_days')
+          .eq('user_id', user.id)
+          .order('duration_days', { ascending: false })
+          .limit(1)
+          .single()
+
+        if (longestStreakData) {
+          longestStreak = (longestStreakData as any).duration_days || 0
+        }
+
         setUserStats({
-          currentStreak: userProfile.current_streak || 0,
-          longestStreak: userProfile.longest_streak || 0,
-          xp: userProfile.xp || 0,
-          level: userProfile.level || 1
+          currentStreak,
+          longestStreak,
+          xp: (userProfile as any).xp || 0,
+          level: (userProfile as any).level || 1
         })
       }
     } catch (error) {
@@ -75,21 +105,36 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
   const handleCheckin = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      if (!user || !session) return
 
-      const { error } = await supabase
-        .from('user_checkins')
-        .insert([
-          {
-            user_id: user.id,
-            checked_in_at: new Date().toISOString()
-          }
-        ])
+      // Use the proper checkin API endpoint with authentication
+      const response = await fetch('/api/user/checkin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      })
 
-      if (error) throw error
+      if (response.ok) {
+        const result = await response.json()
+        
+        // Update local stats with the response data
+        setUserStats(prev => ({
+          ...prev,
+          currentStreak: result.data.streak || prev.currentStreak,
+          xp: result.data.totalXp || prev.xp,
+          level: result.data.level || prev.level
+        }))
 
-      // Refresh stats after checkin
-      fetchUserStats()
+        // Show success notification
+        console.log('Check-in successful:', result.message)
+      } else {
+        const errorData = await response.json()
+        console.error('Checkin failed:', errorData.error || response.statusText)
+      }
     } catch (error) {
       console.error('Error during checkin:', error)
     }
