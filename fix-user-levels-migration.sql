@@ -1,6 +1,9 @@
 -- Fix user levels based on XP using the proper level system
 -- This migration updates all users' levels to match their XP according to the level system
 
+-- First, let's see what levels we have in the database
+SELECT DISTINCT level FROM users ORDER BY level;
+
 -- Update users with 0-49 XP to level 1
 UPDATE users 
 SET level = 1 
@@ -96,10 +99,80 @@ UPDATE users
 SET level = 19 
 WHERE xp >= 10000 AND xp < 12000;
 
--- Update users with 12000+ XP to level 20 (and beyond as needed)
+-- Update users with 12000-13999 XP to level 20
 UPDATE users 
 SET level = 20 
-WHERE xp >= 12000;
+WHERE xp >= 12000 AND xp < 14000;
+
+-- Update users with 14000-15999 XP to level 21
+UPDATE users 
+SET level = 21 
+WHERE xp >= 14000 AND xp < 16000;
+
+-- Update users with 16000-17999 XP to level 22
+UPDATE users 
+SET level = 22 
+WHERE xp >= 16000 AND xp < 18000;
+
+-- Update users with 18000-19999 XP to level 23
+UPDATE users 
+SET level = 23 
+WHERE xp >= 18000 AND xp < 20000;
+
+-- Update users with 20000-24999 XP to level 24
+UPDATE users 
+SET level = 24 
+WHERE xp >= 20000 AND xp < 25000;
+
+-- Update users with 25000-29999 XP to level 25
+UPDATE users 
+SET level = 25 
+WHERE xp >= 25000 AND xp < 30000;
+
+-- Update users with 30000-49999 XP to level 26
+UPDATE users 
+SET level = 26 
+WHERE xp >= 30000 AND xp < 50000;
+
+-- Update users with 50000-74999 XP to level 30
+UPDATE users 
+SET level = 30 
+WHERE xp >= 50000 AND xp < 75000;
+
+-- Update users with 75000-99999 XP to level 35
+UPDATE users 
+SET level = 35 
+WHERE xp >= 75000 AND xp < 100000;
+
+-- Update users with 100000-149999 XP to level 40
+UPDATE users 
+SET level = 40 
+WHERE xp >= 100000 AND xp < 150000;
+
+-- Update users with 150000-199999 XP to level 45
+UPDATE users 
+SET level = 45 
+WHERE xp >= 150000 AND xp < 200000;
+
+-- Update users with 200000-299999 XP to level 50
+UPDATE users 
+SET level = 50 
+WHERE xp >= 200000 AND xp < 300000;
+
+-- Update users with 300000-499999 XP to level 60
+UPDATE users 
+SET level = 60 
+WHERE xp >= 300000 AND xp < 500000;
+
+-- Update users with 500000-999999 XP to level 75
+UPDATE users 
+SET level = 75 
+WHERE xp >= 500000 AND xp < 1000000;
+
+-- Update users with 1000000+ XP to level 100 (max level)
+UPDATE users 
+SET level = 100 
+WHERE xp >= 1000000;
 
 -- Ensure no users have negative XP
 UPDATE users 
@@ -110,3 +183,14 @@ WHERE xp < 0;
 UPDATE users 
 SET level = 1 
 WHERE level < 1;
+
+-- Ensure no users have level greater than 100 (max level)
+UPDATE users 
+SET level = 100 
+WHERE level > 100;
+
+-- Verify the results
+SELECT level, COUNT(*) as user_count, MIN(xp) as min_xp, MAX(xp) as max_xp 
+FROM users 
+GROUP BY level 
+ORDER BY level;

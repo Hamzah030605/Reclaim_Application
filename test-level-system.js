@@ -1,12 +1,7 @@
-export interface LevelInfo {
-  level: number;
-  name: string;
-  description: string;
-  color: string;
-  xpRequired: number;
-}
+// Test script to verify level system is working correctly
+// Run this with: node test-level-system.js
 
-export const LEVEL_SYSTEM: LevelInfo[] = [
+const LEVEL_SYSTEM = [
   // Beginner (0 to 10 days)
   { level: 1, name: "Casual Observer", description: "Just starting the journey", color: "#6B7280", xpRequired: 0 },
   { level: 2, name: "The Curious", description: "Taking first steps", color: "#6B7280", xpRequired: 50 },
@@ -52,7 +47,23 @@ export const LEVEL_SYSTEM: LevelInfo[] = [
   { level: 100, name: "Supreme Being", description: "Ultimate existence", color: "#7C2D12", xpRequired: 1000000 },
 ];
 
-export function getLevelInfo(level: number): LevelInfo {
+function calculateLevelFromXP(xp) {
+  // Ensure XP is not negative
+  const validXP = Math.max(0, xp);
+  
+  // Find the highest level that the user qualifies for
+  const qualifiedLevels = LEVEL_SYSTEM.filter(level => validXP >= level.xpRequired);
+  
+  if (qualifiedLevels.length === 0) {
+    return 1; // Default to level 1 if no levels qualify
+  }
+  
+  // Return the highest level the user qualifies for, but cap at 100
+  const calculatedLevel = Math.max(...qualifiedLevels.map(level => level.level));
+  return Math.min(100, calculatedLevel);
+}
+
+function getLevelInfo(level) {
   // Ensure level is within valid range
   const validLevel = Math.max(1, Math.min(100, level));
   
@@ -70,63 +81,41 @@ export function getLevelInfo(level: number): LevelInfo {
   return LEVEL_SYSTEM[0];
 }
 
-export function getNextLevelInfo(currentLevel: number): LevelInfo | null {
-  // Ensure current level is within valid range
-  const validLevel = Math.max(1, Math.min(100, currentLevel));
-  
-  const nextLevel = LEVEL_SYSTEM.find(l => l.level > validLevel);
-  return nextLevel || null;
-}
+// Test cases
+const testCases = [
+  { xp: 0, expectedLevel: 1 },
+  { xp: 25, expectedLevel: 1 },
+  { xp: 50, expectedLevel: 2 },
+  { xp: 55, expectedLevel: 2 },
+  { xp: 150, expectedLevel: 3 },
+  { xp: 1000, expectedLevel: 7 },
+  { xp: 10007, expectedLevel: 19 }, // This was the problematic case
+  { xp: 50000, expectedLevel: 30 },
+  { xp: 100000, expectedLevel: 40 },
+  { xp: 1000000, expectedLevel: 100 },
+  { xp: 2000000, expectedLevel: 100 }, // Should cap at 100
+  { xp: -5, expectedLevel: 1 }, // Should handle negative XP
+];
 
-export function getProgressToNextLevel(currentXP: number, currentLevel: number): number {
-  // Ensure inputs are valid
-  const validXP = Math.max(0, currentXP);
-  const validLevel = Math.max(1, Math.min(100, currentLevel));
-  
-  const currentLevelInfo = getLevelInfo(validLevel);
-  const nextLevelInfo = getNextLevelInfo(validLevel);
-  
-  if (!nextLevelInfo) return 100; // Max level reached
-  
-  const xpForCurrentLevel = currentLevelInfo.xpRequired;
-  const xpForNextLevel = nextLevelInfo.xpRequired;
-  const xpProgress = Math.max(0, validXP - xpForCurrentLevel);
-  const xpNeeded = xpForNextLevel - xpForCurrentLevel;
-  
-  if (xpNeeded <= 0) return 100; // Prevent division by zero
-  
-  const progress = (xpProgress / xpNeeded) * 100;
-  return Math.min(100, Math.max(0, progress));
-}
+console.log("🧪 Testing Level System...\n");
 
-export function getLevelDisplayName(level: number): string {
-  // Ensure level is within valid range
-  const validLevel = Math.max(1, Math.min(100, level));
+testCases.forEach(({ xp, expectedLevel }) => {
+  const calculatedLevel = calculateLevelFromXP(xp);
+  const levelInfo = getLevelInfo(calculatedLevel);
+  const isCorrect = calculatedLevel === expectedLevel;
   
-  const levelInfo = getLevelInfo(validLevel);
-  return `${levelInfo.name} (Level ${validLevel})`;
-}
+  console.log(`XP: ${xp} → Level: ${calculatedLevel} (${levelInfo.name}) ${isCorrect ? '✅' : '❌ Expected: ' + expectedLevel}`);
+});
 
-export function getLevelColor(level: number): string {
-  // Ensure level is within valid range
-  const validLevel = Math.max(1, Math.min(100, level));
-  
-  const levelInfo = getLevelInfo(validLevel);
-  return levelInfo.color;
-}
+console.log("\n📊 Level System Summary:");
+console.log(`Total levels defined: ${LEVEL_SYSTEM.length}`);
+console.log(`Highest level: ${Math.max(...LEVEL_SYSTEM.map(l => l.level))}`);
+console.log(`Lowest XP requirement: ${Math.min(...LEVEL_SYSTEM.map(l => l.xpRequired))}`);
+console.log(`Highest XP requirement: ${Math.max(...LEVEL_SYSTEM.map(l => l.xpRequired))}`);
 
-export function calculateLevelFromXP(xp: number): number {
-  // Ensure XP is not negative
-  const validXP = Math.max(0, xp);
-  
-  // Find the highest level that the user qualifies for
-  const qualifiedLevels = LEVEL_SYSTEM.filter(level => validXP >= level.xpRequired);
-  
-  if (qualifiedLevels.length === 0) {
-    return 1; // Default to level 1 if no levels qualify
-  }
-  
-  // Return the highest level the user qualifies for, but cap at 100
-  const calculatedLevel = Math.max(...qualifiedLevels.map(level => level.level));
-  return Math.min(100, calculatedLevel);
-}
+console.log("\n🎯 Key Milestones:");
+const milestones = [1, 2, 8, 14, 20, 30, 100];
+milestones.forEach(level => {
+  const info = getLevelInfo(level);
+  console.log(`Level ${level}: ${info.name} (${info.xpRequired} XP)`);
+});
