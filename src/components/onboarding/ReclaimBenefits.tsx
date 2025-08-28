@@ -131,12 +131,12 @@ export default function ReclaimBenefits({ selectedSymptoms, onComplete, onBack }
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-4xl mx-auto p-6 space-y-8"
+      className="max-w-sm mx-auto p-3 space-y-4"
     >
       {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="w-full bg-gray-200 rounded-full h-1.5">
         <motion.div
-          className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full"
+          className="bg-gradient-to-r from-green-500 to-emerald-500 h-1.5 rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${((currentPage + 1) / BENEFIT_PAGES.length) * 100}%` }}
           transition={{ duration: 0.5 }}
@@ -151,38 +151,38 @@ export default function ReclaimBenefits({ selectedSymptoms, onComplete, onBack }
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -50 }}
           transition={{ duration: 0.3 }}
-          className="bg-white rounded-xl shadow-lg p-8 border border-gray-200"
+          className="bg-white rounded-xl shadow-lg p-4 border border-gray-200"
         >
           {/* Header */}
-          <div className="text-center space-y-4 mb-8">
+          <div className="text-center space-y-2 mb-4">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2 }}
-              className={`w-20 h-20 bg-gradient-to-r ${currentPageData.color} rounded-full flex items-center justify-center mx-auto`}
+              className={`w-16 h-16 bg-gradient-to-r ${currentPageData.color} rounded-full flex items-center justify-center mx-auto`}
             >
-              <IconComponent className="w-10 h-10 text-white" />
+              <IconComponent className="w-8 h-8 text-white" />
             </motion.div>
             
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-xl font-bold text-gray-900 mb-1">
                 {currentPageData.title}
               </h1>
-              <p className="text-lg text-gray-600">
+              <p className="text-base text-gray-600">
                 {currentPageData.subtitle}
               </p>
             </div>
           </div>
 
           {/* Main Content */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-lg border border-green-200"
+              className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200"
             >
-              <p className="text-lg text-gray-800 leading-relaxed">
+              <p className="text-base text-gray-800 leading-relaxed">
                 {currentPageData.content.main}
               </p>
             </motion.div>
@@ -192,26 +192,26 @@ export default function ReclaimBenefits({ selectedSymptoms, onComplete, onBack }
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="space-y-3"
+              className="space-y-2"
             >
-              <h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-green-500" />
+              <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-green-500" />
                 How Reclaim Will Help:
               </h3>
-              <ul className="space-y-2">
+              <div className="space-y-2">
                 {currentPageData.content.points.map((point, index) => (
-                  <motion.li
+                  <motion.div
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5 + index * 0.1 }}
-                    className="flex items-start gap-3 text-gray-700"
+                    className="flex items-start gap-3"
                   >
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <span>{point}</span>
-                  </motion.li>
+                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-sm text-gray-700">{point}</p>
+                  </motion.div>
                 ))}
-              </ul>
+              </div>
             </motion.div>
 
             {/* Transformation */}
@@ -219,16 +219,13 @@ export default function ReclaimBenefits({ selectedSymptoms, onComplete, onBack }
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 p-4 rounded-r-lg"
+              className="bg-green-50 border border-green-200 rounded-lg p-4"
             >
               <div className="flex items-start gap-3">
-                <Shield className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-blue-800 font-semibold mb-1">Your Transformation:</p>
-                  <p className="text-blue-700">
-                    {currentPageData.content.transformation}
-                  </p>
-                </div>
+                <Shield className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <p className="text-sm font-semibold text-green-800">
+                  {currentPageData.content.transformation}
+                </p>
               </div>
             </motion.div>
           </div>
@@ -236,56 +233,46 @@ export default function ReclaimBenefits({ selectedSymptoms, onComplete, onBack }
       </AnimatePresence>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between">
-        <button
-          onClick={currentPage === 0 ? onBack : previousPage}
-          className="flex items-center gap-2 px-6 py-3 text-gray-600 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
+      <div className="flex justify-between items-center">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={previousPage}
+          disabled={currentPage === 0}
+          className="flex items-center gap-2 px-4 py-2 text-gray-600 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
-          {currentPage === 0 ? 'Back to Awareness' : 'Previous'}
-        </button>
+          Previous
+        </motion.button>
 
-        <div className="text-center text-sm text-gray-500">
-          Page {currentPage + 1} of {BENEFIT_PAGES.length}
+        <div className="text-center">
+          <p className="text-sm text-gray-600">
+            Page {currentPage + 1} of {BENEFIT_PAGES.length}
+          </p>
         </div>
 
-        {!hasSeenAllPages ? (
-          <button
-            onClick={nextPage}
-            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+        {currentPage === BENEFIT_PAGES.length - 1 ? (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleComplete}
+            className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl text-sm"
           >
-            {currentPage === BENEFIT_PAGES.length - 1 ? 'Complete' : 'Next'}
+            Continue to Social Proof
             <ArrowRight className="w-4 h-4" />
-          </button>
+          </motion.button>
         ) : (
           <motion.button
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            onClick={handleComplete}
-            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={nextPage}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 text-sm"
           >
-            <Star className="w-4 h-4" />
-            Start My Recovery Journey
+            Next
+            <ArrowRight className="w-4 h-4" />
           </motion.button>
         )}
       </div>
-
-      {/* Final Call to Action (shown after all pages) */}
-      <AnimatePresence>
-        {hasSeenAllPages && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6 rounded-xl text-center"
-          >
-            <h3 className="text-xl font-bold mb-2">Your New Life Awaits</h3>
-            <p className="text-green-100">
-              You've seen what pornography takes from you, and now you've seen what Reclaim can give back. 
-              The choice is yours: continue living in the shadows, or step into the light of your true potential.
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   )
 }

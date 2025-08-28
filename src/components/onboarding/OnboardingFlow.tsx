@@ -131,7 +131,7 @@ export default function OnboardingFlow() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="px-4 py-4 sm:px-6 sm:py-6"
+            className="px-2 py-2"
           >
             <AssessmentQuiz onComplete={handleQuizComplete} />
           </motion.div>

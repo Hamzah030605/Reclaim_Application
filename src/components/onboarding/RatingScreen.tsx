@@ -76,24 +76,24 @@ export default function RatingScreen({ onComplete, onSkip }: RatingScreenProps) 
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-2xl mx-auto p-6 space-y-8"
+      className="max-w-sm mx-auto p-3 space-y-4"
     >
       {/* Header */}
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-2">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto"
+          className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto"
         >
-          <Star className="w-10 h-10 text-white" />
+          <Star className="w-8 h-8 text-white" />
         </motion.div>
         
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-xl font-bold text-gray-900 mb-1">
             How was your onboarding experience?
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-base text-gray-600">
             Your feedback helps us improve and helps others find Reclaim
           </p>
         </div>
@@ -104,55 +104,52 @@ export default function RatingScreen({ onComplete, onSkip }: RatingScreenProps) 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="space-y-4"
+        className="bg-white rounded-xl shadow-lg p-4 border border-gray-200"
       >
-        {RATING_OPTIONS.map((option) => {
-          const IconComponent = option.icon
-          const isSelected = rating === option.rating
-          
-          return (
-            <motion.button
-              key={option.rating}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => handleRatingSelect(option.rating)}
-              className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left ${
-                isSelected
-                  ? 'border-yellow-400 bg-yellow-50 shadow-lg'
-                  : 'border-gray-200 bg-white hover:border-gray-300'
-              }`}
-            >
-              <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  isSelected ? 'bg-yellow-400' : 'bg-gray-100'
-                }`}>
-                  <IconComponent className={`w-6 h-6 ${isSelected ? 'text-white' : option.color}`} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-semibold text-gray-900">{option.label}</span>
-                    <div className="flex">
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < option.rating 
-                              ? 'text-yellow-400 fill-current' 
-                              : 'text-gray-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
+        <h2 className="text-lg font-semibold text-gray-900 mb-3 text-center">
+          Rate your experience
+        </h2>
+        
+        <div className="space-y-2">
+          {RATING_OPTIONS.map((option) => {
+            const IconComponent = option.icon
+            const isSelected = rating === option.rating
+            
+            return (
+              <motion.button
+                key={option.rating}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => handleRatingSelect(option.rating)}
+                className={`w-full p-3 rounded-lg border-2 transition-all duration-200 text-left ${
+                  isSelected
+                    ? 'border-yellow-400 bg-yellow-50 text-yellow-900'
+                    : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    isSelected ? 'bg-yellow-400' : 'bg-gray-100'
+                  }`}>
+                    <IconComponent className={`w-4 h-4 ${isSelected ? 'text-white' : option.color}`} />
                   </div>
-                  <p className="text-sm text-gray-600">{option.description}</p>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-sm">{option.label}</span>
+                      <div className="flex">
+                        {[...Array(option.rating)].map((_, i) => (
+                          <Star key={i} className={`w-3 h-3 ${isSelected ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-600 mt-1">{option.description}</p>
+                  </div>
+                  {isSelected && <CheckCircle className="w-5 h-5 text-yellow-400" />}
                 </div>
-                {isSelected && (
-                  <CheckCircle className="w-6 h-6 text-yellow-500" />
-                )}
-              </div>
-            </motion.button>
-          )
-        })}
+              </motion.button>
+            )
+          })}
+        </div>
       </motion.div>
 
       {/* Feedback Section */}
@@ -162,116 +159,69 @@ export default function RatingScreen({ onComplete, onSkip }: RatingScreenProps) 
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="space-y-4"
+            className="bg-white rounded-xl shadow-lg p-4 border border-gray-200"
           >
-            <div className="text-center">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Thank you for your rating! 🎉
-              </h3>
-              <p className="text-gray-600">
-                We'd love to hear more about your experience
-              </p>
+            <div className="flex items-center gap-2 mb-3">
+              <MessageSquare className="w-5 h-5 text-blue-500" />
+              <h3 className="text-lg font-semibold text-gray-900">Share your thoughts</h3>
             </div>
-
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">
-                What did you find most helpful? (Optional)
-              </label>
-              <textarea
-                value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
-                placeholder="Tell us what you liked most about the onboarding process..."
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent resize-none"
-                rows={4}
-              />
-            </div>
+            
+            <textarea
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              placeholder="What did you like most about the onboarding? Any suggestions for improvement?"
+              className="w-full p-3 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:border-blue-500"
+              rows={3}
+            />
+            
+            <p className="text-xs text-gray-500 mt-2">
+              Your feedback helps us improve the experience for others
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Action Buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="flex flex-col sm:flex-row gap-4 justify-center"
-      >
-        <button
+      <div className="flex gap-3">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={handleSkip}
-          className="px-8 py-3 text-gray-600 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
+          className="flex-1 px-4 py-3 text-gray-600 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200 text-sm"
         >
-          Skip for now
-        </button>
+          Skip
+        </motion.button>
+        
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleSubmit}
+          disabled={rating === 0 || isSubmitting}
+          className="flex-1 px-4 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold rounded-lg hover:from-yellow-500 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed text-sm flex items-center justify-center gap-2"
+        >
+          {isSubmitting ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              Submitting...
+            </>
+          ) : (
+            <>
+              Submit Feedback
+              <Send className="w-4 h-4" />
+            </>
+          )}
+        </motion.button>
+      </div>
 
-        {rating > 0 && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            className="flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold rounded-lg hover:from-yellow-500 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Submitting...
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4" />
-                Submit Rating
-              </>
-            )}
-          </motion.button>
-        )}
-      </motion.div>
-
-      {/* Rating Summary */}
-      <AnimatePresence>
-        {rating > 0 && selectedRating && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-xl border border-yellow-200 text-center"
-          >
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Star className="w-5 h-5 text-yellow-500" />
-              <span className="text-lg font-semibold text-gray-900">
-                You rated us {rating}/5 - {selectedRating.label}
-              </span>
-            </div>
-            <p className="text-gray-600">
-              Thank you for your feedback! It helps us improve and reach more people who need help.
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Social Sharing Prompt */}
-      <AnimatePresence>
-        {rating >= 4 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-200 text-center"
-          >
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Help Others Find Reclaim
-            </h3>
-            <p className="text-gray-600 mb-4">
-              If Reclaim helped you, consider sharing your experience to help others who might be struggling.
-            </p>
-            <div className="flex flex-wrap gap-3 justify-center">
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                Share on Social Media
-              </button>
-              <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                Recommend to Friends
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Thank You Message */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="text-center text-sm text-gray-600"
+      >
+        Thank you for helping us improve Reclaim! 🙏
+      </motion.p>
     </motion.div>
   )
 }

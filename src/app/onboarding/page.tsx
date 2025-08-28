@@ -35,17 +35,17 @@ export default function OnboardingPage() {
   return (
     <div className="relative">
       <OnboardingFlow />
-      {/* Login button overlay - positioned to avoid quiz percentage */}
+      {/* Login button overlay - positioned for mobile */}
       <button
         onClick={handleLogin}
-        className="absolute top-16 sm:top-4 right-2 sm:right-4 px-3 sm:px-4 py-2 bg-white/20 text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all text-sm sm:text-base z-50 font-medium"
+        className="absolute top-16 right-2 px-3 py-2 bg-white/20 text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all text-sm z-50 font-medium"
       >
         Login
       </button>
-      {/* Home button overlay - positioned to avoid quiz percentage */}
+      {/* Home button overlay - positioned for mobile */}
       <button
         onClick={handleGoHome}
-        className="absolute top-16 sm:top-4 left-2 sm:left-4 px-3 sm:px-4 py-2 bg-white/20 text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all text-sm sm:text-base z-50 font-medium"
+        className="absolute top-16 left-2 px-3 py-2 bg-white/20 text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all text-sm z-50 font-medium"
       >
         Home
       </button>

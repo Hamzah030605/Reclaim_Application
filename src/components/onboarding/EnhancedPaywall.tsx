@@ -86,17 +86,17 @@ export default function EnhancedPaywall({ onSubscribe, onBack }: EnhancedPaywall
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-7xl mx-auto p-6 space-y-8"
+      className="max-w-sm mx-auto p-3 space-y-4"
     >
       {/* Header */}
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-3">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto"
+          className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto"
         >
-          <Crown className="w-10 h-10 text-white" />
+          <Crown className="w-8 h-8 text-white" />
         </motion.div>
         
         <motion.div
@@ -104,202 +104,127 @@ export default function EnhancedPaywall({ onSubscribe, onBack }: EnhancedPaywall
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-xl font-bold text-gray-900 mb-2">
             Get Unlimited Access to Reclaim
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-base text-gray-600">
             Join 50,000+ users who have transformed their lives
           </p>
         </motion.div>
       </div>
 
-      {/* Phone Displays */}
+      {/* Pricing Plans */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="grid lg:grid-cols-2 gap-8 items-center"
+        className="space-y-3"
       >
-        {/* Phone Mockups */}
-        <div className="relative">
-          <div className="grid grid-cols-2 gap-4">
-            {PHONE_DISPLAYS.map((phone, index) => (
+        {/* Monthly Plan */}
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => setSelectedPlan('monthly')}
+          className={`w-full p-4 rounded-xl border-2 transition-all duration-200 ${
+            selectedPlan === 'monthly'
+              ? 'border-blue-500 bg-blue-50'
+              : 'border-gray-200 bg-white hover:border-gray-300'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="text-left">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="font-semibold text-gray-900">Monthly Plan</h3>
+                {selectedPlan === 'monthly' && <CheckCircle className="w-4 h-4 text-blue-500" />}
+              </div>
+              <div className="text-2xl font-bold text-gray-900">${monthlyPrice}</div>
+              <div className="text-sm text-gray-600">per month</div>
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-gray-600">Cancel anytime</div>
+            </div>
+          </div>
+        </motion.button>
+
+        {/* Yearly Plan */}
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => setSelectedPlan('yearly')}
+          className={`w-full p-4 rounded-xl border-2 transition-all duration-200 relative ${
+            selectedPlan === 'yearly'
+              ? 'border-green-500 bg-green-50'
+              : 'border-gray-200 bg-white hover:border-gray-300'
+          }`}
+        >
+          <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+            Save {Math.round(savings)}%
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="text-left">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="font-semibold text-gray-900">Yearly Plan</h3>
+                {selectedPlan === 'yearly' && <CheckCircle className="w-4 h-4 text-green-500" />}
+              </div>
+              <div className="text-2xl font-bold text-gray-900">${yearlyPrice}</div>
+              <div className="text-sm text-gray-600">per year</div>
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-gray-600">Best value</div>
+            </div>
+          </div>
+        </motion.button>
+      </motion.div>
+
+      {/* Features */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="bg-white rounded-xl shadow-lg p-4 border border-gray-200"
+      >
+        <h3 className="text-lg font-semibold text-gray-900 mb-3 text-center">What's Included</h3>
+        <div className="grid grid-cols-2 gap-3">
+          {FEATURES.map((feature, index) => {
+            const IconComponent = feature.icon
+            return (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                className={`relative ${index === currentPhoneIndex ? 'z-10' : 'z-0'}`}
-                onClick={() => setCurrentPhoneIndex(index)}
+                transition={{ delay: 0.6 + index * 0.1 }}
+                className="text-center p-3 bg-gray-50 rounded-lg"
               >
-                <div className="bg-gray-900 rounded-3xl p-2 shadow-2xl">
-                  <div className="bg-white rounded-2xl p-4 h-64 flex flex-col">
-                    <div className={`w-full h-2 bg-gradient-to-r ${phone.color} rounded-full mb-3`} />
-                    <h3 className="font-bold text-gray-900 mb-1">{phone.title}</h3>
-                    <p className="text-xs text-gray-600 mb-3">{phone.description}</p>
-                    <div className="space-y-2 flex-1">
-                      {phone.features.map((feature, featureIndex) => (
-                        <div key={featureIndex} className="flex items-center gap-2">
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          <span className="text-xs text-gray-700">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                <div className={`w-8 h-8 bg-gradient-to-r ${feature.color} rounded-full flex items-center justify-center mx-auto mb-2`}>
+                  <IconComponent className="w-4 h-4 text-white" />
                 </div>
-                {index === currentPhoneIndex && (
-                  <motion.div
-                    layoutId="activePhone"
-                    className="absolute -inset-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl -z-10"
-                    initial={false}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
+                <h4 className="text-sm font-semibold text-gray-900 mb-1">{feature.title}</h4>
+                <p className="text-xs text-gray-600">{feature.description}</p>
               </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Features List */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">
-            Everything You Need to Succeed
-          </h2>
-          <div className="grid gap-4">
-            {FEATURES.map((feature, index) => {
-              const IconComponent = feature.icon
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 + index * 0.1 }}
-                  className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200"
-                >
-                  <div className={`w-10 h-10 bg-gradient-to-r ${feature.color} rounded-full flex items-center justify-center`}>
-                    <IconComponent className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{feature.title}</h3>
-                    <p className="text-sm text-gray-600">{feature.description}</p>
-                  </div>
-                </motion.div>
-              )
-            })}
-          </div>
+            )
+          })}
         </div>
       </motion.div>
 
-      {/* Pricing */}
+      {/* Call to Action */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        className="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl border border-blue-200"
+        className="text-center"
       >
-        <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
-          Choose Your Plan
-        </h2>
-        
-        <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-          {/* Monthly Plan */}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setSelectedPlan('monthly')}
-            className={`p-6 rounded-xl border-2 transition-all duration-200 ${
-              selectedPlan === 'monthly'
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 bg-white hover:border-gray-300'
-            }`}
-          >
-            <div className="text-center">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Monthly</h3>
-              <div className="text-3xl font-bold text-gray-900 mb-1">${monthlyPrice}</div>
-              <div className="text-gray-600 mb-4">per month</div>
-              <div className="text-sm text-gray-500">Cancel anytime</div>
-            </div>
-          </motion.button>
-
-          {/* Yearly Plan */}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setSelectedPlan('yearly')}
-            className={`p-6 rounded-xl border-2 transition-all duration-200 relative ${
-              selectedPlan === 'yearly'
-                ? 'border-green-500 bg-green-50'
-                : 'border-gray-200 bg-white hover:border-gray-300'
-            }`}
-          >
-            <div className="absolute -top-3 -right-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-              SAVE {Math.round(savings)}%
-            </div>
-            <div className="text-center">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Yearly</h3>
-              <div className="text-3xl font-bold text-gray-900 mb-1">${yearlyPrice}</div>
-              <div className="text-gray-600 mb-1">per year</div>
-              <div className="text-sm text-gray-500 line-through">${monthlyPrice * 12}/year</div>
-              <div className="text-sm text-green-600 font-semibold">Save ${(monthlyPrice * 12) - yearlyPrice}/year</div>
-            </div>
-          </motion.button>
-        </div>
-
-        <div className="text-center mt-6">
-          <p className="text-gray-600 mb-4">
-            <Lock className="w-4 h-4 inline mr-2" />
-            Secure payment • Cancel anytime • 30-day money-back guarantee
-          </p>
-        </div>
-      </motion.div>
-
-      {/* Action Buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-        className="flex flex-col sm:flex-row gap-4 justify-center"
-      >
-        <button
-          onClick={onBack}
-          className="px-8 py-3 text-gray-600 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
-        >
-          Back
-        </button>
-        
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => onSubscribe(selectedPlan)}
-          className="flex items-center justify-center gap-3 px-12 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-xl rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+          className="w-full px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl text-sm flex items-center justify-center gap-2"
         >
+          <Lock className="w-5 h-5" />
           Start My Journey
-          <ArrowRight className="w-6 h-6" />
-        </button>
-      </motion.div>
-
-      {/* Trust Indicators */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9 }}
-        className="text-center space-y-4"
-      >
-        <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
-          <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            <span>50,000+ users</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Star className="w-4 h-4 text-yellow-500 fill-current" />
-            <span>4.9/5 rating</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            <span>94% success rate</span>
-          </div>
-        </div>
-        
-        <p className="text-sm text-gray-500">
-          Join thousands of others who have already transformed their lives with Reclaim
+          <ArrowRight className="w-5 h-5" />
+        </motion.button>
+        <p className="text-xs text-gray-500 mt-2">
+          Secure payment • Cancel anytime • 30-day money-back guarantee
         </p>
       </motion.div>
     </motion.div>

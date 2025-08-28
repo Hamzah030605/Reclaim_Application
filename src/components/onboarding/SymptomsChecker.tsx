@@ -104,24 +104,24 @@ export default function SymptomsChecker({ onComplete, onBack }: SymptomsCheckerP
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-4xl mx-auto p-6 space-y-8"
+      className="max-w-sm mx-auto p-3 space-y-4"
     >
       {/* Header */}
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-2">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto"
+          className="w-12 h-12 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto"
         >
-          <AlertTriangle className="w-8 h-8 text-white" />
+          <AlertTriangle className="w-6 h-6 text-white" />
         </motion.div>
-        <h1 className="text-3xl font-bold text-gray-900">Symptom Checker</h1>
-        <p className="text-gray-600">Select all symptoms that apply to you</p>
+        <h1 className="text-xl font-bold text-gray-900">Symptom Checker</h1>
+        <p className="text-gray-600 text-sm">Select all symptoms that apply to you</p>
       </div>
 
       {/* Category Tabs */}
-      <div className="flex flex-wrap gap-4 justify-center">
+      <div className="flex flex-wrap gap-2 justify-center">
         {CATEGORIES.map((category) => {
           const IconComponent = category.icon
           const isActive = activeCategory === category.key
@@ -136,13 +136,13 @@ export default function SymptomsChecker({ onComplete, onBack }: SymptomsCheckerP
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setActiveCategory(category.key as any)}
-              className={`flex items-center gap-3 px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200 text-sm ${
                 isActive
                   ? `bg-gradient-to-r ${category.color} text-white shadow-lg`
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              <IconComponent className="w-5 h-5" />
+              <IconComponent className="w-4 h-4" />
               <div className="text-left">
                 <div className="font-semibold">{category.label}</div>
                 <div className="text-xs opacity-75">
@@ -159,18 +159,18 @@ export default function SymptomsChecker({ onComplete, onBack }: SymptomsCheckerP
         key={activeCategory}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
+        className="bg-white rounded-xl shadow-lg p-4 border border-gray-200"
       >
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 mb-1">
             {getCategoryInfo(activeCategory).label} Symptoms
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-sm">
             {getCategoryInfo(activeCategory).description}
           </p>
         </div>
 
-        <div className="grid gap-3">
+        <div className="grid gap-2">
           {getSymptomsByCategory(activeCategory).map((symptom) => {
             const isSelected = selectedSymptoms.includes(symptom.id)
             
@@ -180,20 +180,20 @@ export default function SymptomsChecker({ onComplete, onBack }: SymptomsCheckerP
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => toggleSymptom(symptom.id)}
-                className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all duration-200 text-left ${
+                className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all duration-200 text-left ${
                   isSelected
                     ? 'border-blue-500 bg-blue-50 text-blue-900'
                     : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
                 }`}
               >
-                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                   isSelected
                     ? 'border-blue-500 bg-blue-500'
                     : 'border-gray-300'
                 }`}>
-                  {isSelected && <CheckCircle className="w-4 h-4 text-white" />}
+                  {isSelected && <CheckCircle className="w-3 h-3 text-white" />}
                 </div>
-                <span className="font-medium">{symptom.text}</span>
+                <span className="font-medium text-sm">{symptom.text}</span>
               </motion.button>
             )
           })}
@@ -201,22 +201,22 @@ export default function SymptomsChecker({ onComplete, onBack }: SymptomsCheckerP
       </motion.div>
 
       {/* Progress and Actions */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="text-center sm:text-left">
-          <p className="text-gray-600">
+      <div className="flex flex-col items-center justify-between gap-3">
+        <div className="text-center">
+          <p className="text-gray-600 text-sm">
             Selected: <span className="font-semibold text-blue-600">{selectedSymptoms.length}</span> symptoms
           </p>
           {selectedSymptoms.length > 0 && (
-            <p className="text-sm text-gray-500">
+            <p className="text-xs text-gray-500">
               {selectedSymptoms.length >= 5 ? 'Multiple symptoms detected' : 'Some symptoms detected'}
             </p>
           )}
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <button
             onClick={onBack}
-            className="px-6 py-3 text-gray-600 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200"
+            className="px-4 py-2 text-gray-600 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-all duration-200 text-sm"
           >
             Back
           </button>
@@ -224,10 +224,10 @@ export default function SymptomsChecker({ onComplete, onBack }: SymptomsCheckerP
           <button
             onClick={handleContinue}
             disabled={selectedSymptoms.length === 0}
-            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold rounded-lg hover:from-red-600 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold rounded-lg hover:from-red-600 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             Continue to Awareness
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </div>

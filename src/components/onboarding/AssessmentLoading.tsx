@@ -69,10 +69,10 @@ export default function AssessmentLoading({ onComplete }: AssessmentLoadingProps
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-brand-blue to-brand-blue-dark flex items-center justify-center">
-      <div className="text-center max-w-md mx-auto px-4">
+      <div className="text-center max-w-sm mx-auto px-3">
         {/* Progress Circle */}
-        <div className="relative mb-8">
-          <svg className="w-32 h-32 mx-auto" viewBox="0 0 120 120">
+        <div className="relative mb-6">
+          <svg className="w-24 h-24 mx-auto" viewBox="0 0 120 120">
             {/* Background circle */}
             <circle
               cx="60"
@@ -106,7 +106,7 @@ export default function AssessmentLoading({ onComplete }: AssessmentLoadingProps
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.3 }}
-              className="text-2xl font-bold text-white"
+              className="text-xl font-bold text-white"
             >
               {Math.floor(progress)}%
             </motion.div>
@@ -121,24 +121,24 @@ export default function AssessmentLoading({ onComplete }: AssessmentLoadingProps
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            className="mb-6"
+            className="mb-4"
           >
-            <div className="flex items-center justify-center mb-4">
+            <div className="flex items-center justify-center mb-3">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center"
+                className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center"
               >
-                <IconComponent className="w-6 h-6 text-yellow-900" />
+                <IconComponent className="w-5 h-5 text-yellow-900" />
               </motion.div>
             </div>
             
-            <h3 className="text-xl font-bold text-white mb-2">
+            <h3 className="text-lg font-bold text-white mb-2">
               {currentStepData?.title}
             </h3>
             
-            <p className="text-blue-100">
+            <p className="text-blue-100 text-sm">
               {currentStepData?.description}
             </p>
           </motion.div>
@@ -164,7 +164,7 @@ export default function AssessmentLoading({ onComplete }: AssessmentLoadingProps
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="text-blue-200 text-sm mt-6"
+          className="text-blue-200 text-xs mt-4"
         >
           This personalized analysis will help us create the perfect recovery plan for you.
         </motion.p>
