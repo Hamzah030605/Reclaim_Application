@@ -80,10 +80,13 @@ export function getProgressToNextLevel(currentXP: number, currentLevel: number):
   
   const xpForCurrentLevel = currentLevelInfo.xpRequired;
   const xpForNextLevel = nextLevelInfo.xpRequired;
-  const xpProgress = currentXP - xpForCurrentLevel;
+  const xpProgress = Math.max(0, currentXP - xpForCurrentLevel);
   const xpNeeded = xpForNextLevel - xpForCurrentLevel;
   
-  return Math.min(100, Math.max(0, (xpProgress / xpNeeded) * 100));
+  if (xpNeeded <= 0) return 100; // Prevent division by zero
+  
+  const progress = (xpProgress / xpNeeded) * 100;
+  return Math.min(100, Math.max(0, progress));
 }
 
 export function getLevelDisplayName(level: number): string {
@@ -94,4 +97,16 @@ export function getLevelDisplayName(level: number): string {
 export function getLevelColor(level: number): string {
   const levelInfo = getLevelInfo(level);
   return levelInfo.color;
+}
+
+export function calculateLevelFromXP(xp: number): number {
+  // Find the highest level that the user qualifies for
+  const qualifiedLevels = LEVEL_SYSTEM.filter(level => xp >= level.xpRequired);
+  
+  if (qualifiedLevels.length === 0) {
+    return 1; // Default to level 1 if no levels qualify
+  }
+  
+  // Return the highest level the user qualifies for
+  return Math.max(...qualifiedLevels.map(level => level.level));
 }

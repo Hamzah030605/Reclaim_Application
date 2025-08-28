@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { calculateLevelFromXP } from '@/lib/levelSystem'
 
 export async function POST(request: NextRequest) {
   try {
@@ -158,7 +159,7 @@ export async function POST(request: NextRequest) {
 
     // Calculate new XP and level
     const newXp = (userProfile?.xp || 0) + xpGained
-    const newLevel = Math.floor(newXp / 100) + 1 // Level up every 100 XP
+    const newLevel = calculateLevelFromXP(newXp)
 
     // Update user's XP and level
     const { error: xpError } = await supabase
