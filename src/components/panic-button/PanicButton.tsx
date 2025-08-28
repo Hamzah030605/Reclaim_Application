@@ -1,44 +1,79 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { AlertTriangle } from 'lucide-react'
-import PanicInterventionModal from './PanicInterventionModal'
+import { AlertTriangle, Heart, Shield, Zap } from 'lucide-react'
 
-export default function PanicButton() {
-  const [showIntervention, setShowIntervention] = useState(false)
+interface PanicButtonProps {
+  onPanicClick?: () => void
+}
 
+export default function PanicButton({ onPanicClick }: PanicButtonProps) {
   const handlePanicClick = () => {
-    // Haptic feedback if available
-    if (navigator.vibrate) {
-      navigator.vibrate(100)
+    if (onPanicClick) {
+      onPanicClick()
+    } else {
+      // Default behavior - could open a modal or redirect
+      console.log('Panic button clicked - opening support modal')
     }
-    
-    setShowIntervention(true)
   }
 
   return (
-    <>
+    <div className="text-center space-y-4">
+      {/* Enhanced Panic Button with Better Visual Feedback */}
       <motion.button
         onClick={handlePanicClick}
-        className="btn-panic relative group w-full sm:w-auto"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3 }}
+        className="relative w-full bg-gradient-to-r from-panic-red via-red-500 to-panic-red text-white font-bold py-6 px-8 rounded-2xl shadow-2xl transition-all duration-300 group overflow-hidden"
+        whileHover={{ 
+          scale: 1.02, 
+          boxShadow: "0 25px 50px rgba(236, 87, 102, 0.4)",
+          y: -3
+        }}
+        whileTap={{ scale: 0.98 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        <div className="flex items-center justify-center space-x-2 sm:space-x-3">
-          <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8" />
-          <span className="text-lg sm:text-xl font-bold">PANIC BUTTON</span>
-        </div>
+        {/* Animated background gradient */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-red-600 via-panic-red to-red-600"
+          animate={{
+            backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
         
+        {/* Content overlay */}
+        <div className="relative z-10 flex items-center justify-center space-x-3">
+          <motion.div
+            animate={{ 
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0]
+            }}
+            transition={{ 
+              duration: 2, 
+              repeat: Infinity, 
+              repeatDelay: 1 
+            }}
+            className="flex items-center justify-center"
+          >
+            <AlertTriangle className="w-8 h-8 sm:w-10 sm:h-10" />
+          </motion.div>
+          <div className="text-center">
+            <span className="text-xl sm:text-2xl font-bold block">I Need Support Now</span>
+            <span className="text-sm opacity-90 block mt-1">Feeling an urge? Tap for immediate help</span>
+          </div>
+        </div>
+
         {/* Pulsing ring animation */}
         <motion.div
-          className="absolute inset-0 rounded-full border-4 border-panic-red"
+          className="absolute inset-0 rounded-2xl border-4 border-white/30"
           animate={{
-            scale: [1, 1.2, 1],
-            opacity: [1, 0, 1],
+            scale: [1, 1.1, 1],
+            opacity: [1, 0.5, 1],
           }}
           transition={{
             duration: 2,
@@ -48,13 +83,45 @@ export default function PanicButton() {
         />
       </motion.button>
 
-      <p className="text-xs sm:text-sm text-secondary-text mt-3 max-w-xs mx-auto text-center">
-        Feeling an urge? Tap the panic button for immediate support and intervention.
-      </p>
+      {/* Enhanced Supportive Message */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.6 }}
+        className="space-y-3"
+      >
+        <p className="text-sm text-secondary-text max-w-xs mx-auto leading-relaxed">
+          You're not alone. This moment will pass. Tap the button above for immediate support and guidance.
+        </p>
+        
+        {/* Quick Support Options */}
+        <div className="flex items-center justify-center space-x-4 text-xs text-secondary-text">
+          <div className="flex items-center space-x-1">
+            <Heart className="w-3 h-3 text-panic-red" />
+            <span>Breathe</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <Shield className="w-3 h-3 text-brand-blue" />
+            <span>Stay Strong</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <Zap className="w-3 h-3 text-achievement-gold" />
+            <span>You've Got This</span>
+          </div>
+        </div>
+      </motion.div>
 
-      {showIntervention && (
-        <PanicInterventionModal onClose={() => setShowIntervention(false)} />
-      )}
-    </>
+      {/* Emergency Contact Info (Optional) */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6, duration: 0.6 }}
+        className="bg-gradient-to-r from-panic-red/5 to-red-500/5 rounded-lg p-3 border border-panic-red/20"
+      >
+        <p className="text-xs text-secondary-text text-center">
+          <strong>Emergency?</strong> If you're in crisis, please call your local emergency services or a crisis hotline immediately.
+        </p>
+      </motion.div>
+    </div>
   )
 }
