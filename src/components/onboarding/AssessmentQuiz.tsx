@@ -10,8 +10,7 @@ import {
   Brain,
   Heart,
   Target,
-  Users,
-  LogIn
+  Users
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
@@ -43,27 +42,11 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
   const [personalInfo, setPersonalInfo] = useState({ name: '', age: '' })
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const router = useRouter()
 
   useEffect(() => {
     fetchQuestions()
-    checkAuthStatus()
   }, [])
-
-  const checkAuthStatus = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      setIsAuthenticated(!!session?.user)
-    } catch (error) {
-      console.error('Error checking auth status:', error)
-      setIsAuthenticated(false)
-    }
-  }
-
-  const handleLogin = () => {
-    router.push('/auth/login')
-  }
 
   const fetchQuestions = async () => {
     try {
@@ -247,7 +230,7 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-brand-blue to-brand-blue-dark">
       <div className="container mx-auto px-4 py-8">
-        {/* Header with progress and login prompt */}
+        {/* Header with progress */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex-1">
             <div className="flex items-center mb-2">
@@ -265,19 +248,6 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
               Question {currentQuestionIndex + 1} of {questions.length}
             </p>
           </div>
-          
-          {/* Login prompt - show every 3 questions */}
-          {!isAuthenticated && (currentQuestionIndex + 1) % 3 === 0 && (
-            <div className="ml-4">
-              <button
-                onClick={handleLogin}
-                className="flex items-center px-4 py-2 bg-white/10 text-white rounded-lg border border-white/20 hover:bg-white/20 transition-all"
-              >
-                <LogIn className="w-4 h-4 mr-2" />
-                Already a user? Login
-              </button>
-            </div>
-          )}
         </div>
 
         {/* Main quiz content */}
@@ -362,27 +332,6 @@ export default function AssessmentQuiz({ onComplete }: AssessmentQuizProps) {
               </div>
             </motion.div>
           </AnimatePresence>
-
-          {/* Login prompt at bottom - show for last few questions */}
-          {!isAuthenticated && currentQuestionIndex >= questions.length - 3 && (
-            <div className="text-center mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
-              <p className="text-white/80 mb-3">
-                Want to save your progress and get your personalized plan? Sign in to continue your journey.
-              </p>
-              <div className="flex justify-center space-x-4">
-                <button
-                  onClick={handleLogin}
-                  className="flex items-center px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 font-semibold rounded-lg hover:from-yellow-300 hover:to-yellow-400 transition-all"
-                >
-                  <LogIn className="w-4 h-4 mr-2" />
-                  Sign In
-                </button>
-                <span className="text-white/60 text-sm flex items-center">
-                  or continue without saving
-                </span>
-              </div>
-            </div>
-          )}
 
           {/* Navigation */}
           <div className="flex justify-between mt-8">

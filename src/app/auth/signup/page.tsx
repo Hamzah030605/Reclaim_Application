@@ -44,6 +44,7 @@ function SignupContent() {
           email,
           password,
           username,
+          selectedPlan, // Pass the selected plan
         }),
       })
 
@@ -64,14 +65,8 @@ function SignupContent() {
             router.push('/auth/login')
           }, 3000)
         } else {
-          // User is now signed in, redirect to paywall or dashboard based on plan
-          if (selectedPlan) {
-            // If they came from paywall with a plan, redirect back to paywall
-            router.push('/paywall')
-          } else {
-            // Otherwise go to paywall
-            router.push('/paywall')
-          }
+          // User is now signed in, redirect to dashboard since they've already seen the paywall
+          router.push('/dashboard')
         }
       }
     } catch (err) {

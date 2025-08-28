@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password, username } = await request.json()
+    const { email, password, username, selectedPlan } = await request.json()
 
     // Create user account using admin client to auto-confirm email
     const supabaseAdmin = createClient(
@@ -38,10 +38,11 @@ export async function POST(request: NextRequest) {
           created_at: new Date().toISOString(),
           last_active_at: new Date().toISOString(),
           onboarding_complete: false,
+          has_completed_onboarding: true, // Mark as completed since they came from onboarding
+          is_premium: selectedPlan ? true : false, // Set premium status based on selected plan
           xp: 0,
           level: 1,
           visual_growth_state: 'seed',
-          is_premium: false,
           total_relapses: 0,
           total_followers: 0,
           total_following: 0,

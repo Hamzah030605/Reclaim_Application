@@ -105,9 +105,17 @@ export default function OnboardingFlow() {
 
   const handlePaywallSubscribe = async (plan: 'monthly' | 'yearly') => {
     console.log('User selected plan:', plan)
+    console.log('About to redirect to signup with plan:', plan)
     
-    // Here you would handle the subscription
-    setCurrentStep('calai')
+    try {
+      // Redirect to signup page with the selected plan
+      const signupUrl = `/auth/signup?plan=${plan}&onboarding=complete`
+      console.log('Redirecting to:', signupUrl)
+      // Use window.location.href instead of router.push to ensure proper redirect
+      window.location.href = signupUrl
+    } catch (error) {
+      console.error('Error redirecting to signup:', error)
+    }
   }
 
   const handlePaywallBack = () => {
@@ -148,7 +156,6 @@ export default function OnboardingFlow() {
           >
             <AssessmentAnalysis 
               analysisData={assessmentData} 
-              onContinue={handleAnalysisComplete}
               onCheckSymptoms={handleCheckSymptoms}
             />
           </motion.div>

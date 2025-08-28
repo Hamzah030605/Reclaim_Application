@@ -6,7 +6,6 @@ import {
   TrendingUp, 
   AlertTriangle, 
   CheckCircle,
-  ArrowRight,
   Brain,
   Heart,
   Target,
@@ -32,7 +31,7 @@ interface AssessmentAnalysisProps {
     }
     recommendations: string[]
   }
-  onContinue: () => void
+  onContinue?: () => void
   onCheckSymptoms: () => void
 }
 
@@ -175,7 +174,7 @@ export default function AssessmentAnalysis({ analysisData, onContinue, onCheckSy
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="flex flex-col sm:flex-row gap-4 justify-center"
+        className="flex justify-center"
       >
         <button
           onClick={onCheckSymptoms}
@@ -183,14 +182,6 @@ export default function AssessmentAnalysis({ analysisData, onContinue, onCheckSy
         >
           <Stethoscope className="w-5 h-5" />
           Check Symptoms
-        </button>
-        
-        <button
-          onClick={onContinue}
-          className="flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-        >
-          Continue to Recovery Plan
-          <ArrowRight className="w-5 h-5" />
         </button>
       </motion.div>
     </motion.div>
