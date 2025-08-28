@@ -37,6 +37,7 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
   const [hasCheckedInToday, setHasCheckedInToday] = useState(false)
   const [checkinLoading, setCheckinLoading] = useState(false)
   const [showBreathingExercise, setShowBreathingExercise] = useState(false)
+  const [showJournalHistory, setShowJournalHistory] = useState(true)
   const [userStats, setUserStats] = useState({
     currentStreak: 0,
     longestStreak: 0,
@@ -502,10 +503,32 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
         transition={{ duration: 0.6, delay: 1.2 }}
         className="card"
       >
-        <JournalHistory 
-          key={refreshJournalHistory}
-          onRefresh={() => setRefreshJournalHistory(prev => prev + 1)} 
-        />
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-primary-text">Journal History</h3>
+          <button
+            onClick={() => setShowJournalHistory(!showJournalHistory)}
+            className="text-secondary-text hover:text-primary-text transition-colors"
+          >
+            {showJournalHistory ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          </button>
+        </div>
+        
+        <AnimatePresence>
+          {showJournalHistory && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden"
+            >
+              <JournalHistory 
+                key={refreshJournalHistory}
+                onRefresh={() => setRefreshJournalHistory(prev => prev + 1)} 
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* Urge Journal Modal */}
