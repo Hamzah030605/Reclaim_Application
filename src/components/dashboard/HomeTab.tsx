@@ -13,7 +13,8 @@ import {
   ChevronDown,
   ChevronUp,
   Heart,
-  Zap
+  Zap,
+  PenTool
 } from 'lucide-react'
 import PanicButton from '@/components/panic-button/PanicButton'
 import UrgeJournalModal from '@/components/common/UrgeJournalModal'
@@ -30,6 +31,7 @@ interface HomeTabProps {
 export default function HomeTab({ setActiveTab }: HomeTabProps) {
   const [showUrgeJournal, setShowUrgeJournal] = useState(false)
   const [showDetailedStats, setShowDetailedStats] = useState(false)
+  const [refreshJournalHistory, setRefreshJournalHistory] = useState(0)
   const [userStats, setUserStats] = useState({
     currentStreak: 0,
     longestStreak: 0,
@@ -301,7 +303,7 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
         </div>
       </motion.div>
 
-      {/* Quick Actions - Progressive Disclosure */}
+      {/* Detailed Stats - Progressive Disclosure */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -309,7 +311,7 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
         className="card"
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-primary-text">Quick Actions</h3>
+          <h3 className="text-lg font-semibold text-primary-text">Your Stats</h3>
           <button
             onClick={() => setShowDetailedStats(!showDetailedStats)}
             className="text-secondary-text hover:text-primary-text transition-colors"
@@ -320,16 +322,6 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
         
         <div className="grid grid-cols-2 gap-3 mb-4">
           <motion.button
-            onClick={() => setActiveTab?.('activities')}
-            className="flex flex-col items-center p-4 bg-gradient-to-br from-achievement-gold/10 to-orange-500/10 rounded-xl border border-achievement-gold/20 hover:border-achievement-gold/40 transition-all duration-200"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Target className="w-8 h-8 text-achievement-gold mb-2" />
-            <span className="text-sm font-medium text-primary-text">Activities</span>
-          </motion.button>
-          
-          <motion.button
             onClick={() => setActiveTab?.('learn')}
             className="flex flex-col items-center p-4 bg-gradient-to-br from-community-blue/10 to-brand-blue/10 rounded-xl border border-community-blue/20 hover:border-community-blue/40 transition-all duration-200"
             whileHover={{ scale: 1.02 }}
@@ -337,6 +329,16 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
           >
             <BookOpen className="w-8 h-8 text-community-blue mb-2" />
             <span className="text-sm font-medium text-primary-text">Learn</span>
+          </motion.button>
+          
+          <motion.button
+            onClick={() => setActiveTab?.('community')}
+            className="flex flex-col items-center p-4 bg-gradient-to-br from-success-green/10 to-emerald-500/10 rounded-xl border border-success-green/20 hover:border-success-green/40 transition-all duration-200"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Calendar className="w-8 h-8 text-success-green mb-2" />
+            <span className="text-sm font-medium text-primary-text">Community</span>
           </motion.button>
         </div>
 
@@ -408,10 +410,55 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
         </button>
       </motion.div>
 
+      {/* Quick Actions - Enhanced with Journal */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1.0 }}
+        className="card"
+      >
+        <h3 className="text-lg font-semibold text-primary-text mb-4">Quick Actions</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <motion.button
+            onClick={() => setShowUrgeJournal(true)}
+            className="flex flex-col items-center p-4 bg-gradient-to-br from-brand-blue/10 to-community-blue/10 rounded-xl border border-brand-blue/20 hover:border-brand-blue/40 transition-all duration-200"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <PenTool className="w-8 h-8 text-brand-blue mb-2" />
+            <span className="text-sm font-medium text-primary-text">Urge Journal</span>
+          </motion.button>
+          
+          <motion.button
+            onClick={() => setActiveTab?.('activities')}
+            className="flex flex-col items-center p-4 bg-gradient-to-br from-achievement-gold/10 to-orange-500/10 rounded-xl border border-achievement-gold/20 hover:border-achievement-gold/40 transition-all duration-200"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Target className="w-8 h-8 text-achievement-gold mb-2" />
+            <span className="text-sm font-medium text-primary-text">Activities</span>
+          </motion.button>
+        </div>
+      </motion.div>
+
+      {/* Journal History */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1.2 }}
+        className="card"
+      >
+        <JournalHistory 
+          key={refreshJournalHistory}
+          onRefresh={() => setRefreshJournalHistory(prev => prev + 1)} 
+        />
+      </motion.div>
+
       {/* Urge Journal Modal */}
       <UrgeJournalModal
         isOpen={showUrgeJournal}
         onClose={() => setShowUrgeJournal(false)}
+        onSave={() => setRefreshJournalHistory(prev => prev + 1)}
       />
     </div>
   )
