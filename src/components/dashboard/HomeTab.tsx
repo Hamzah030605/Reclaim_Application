@@ -14,12 +14,14 @@ import {
   ChevronUp,
   Heart,
   Zap,
-  PenTool
+  PenTool,
+  CheckCircle
 } from 'lucide-react'
 import PanicButton from '@/components/panic-button/PanicButton'
 import UrgeJournalModal from '@/components/common/UrgeJournalModal'
 import JournalHistory from '@/components/common/JournalHistory'
 import LevelDisplay from '@/components/common/LevelDisplay'
+import BreathingExercise from '@/components/common/BreathingExercise'
 import { getLevelInfo, getLevelColor, getProgressToNextLevel, getNextLevelInfo } from '@/lib/levelSystem'
 
 import { supabase } from '@/lib/supabase'
@@ -32,6 +34,9 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
   const [showUrgeJournal, setShowUrgeJournal] = useState(false)
   const [showDetailedStats, setShowDetailedStats] = useState(false)
   const [refreshJournalHistory, setRefreshJournalHistory] = useState(0)
+  const [hasCheckedInToday, setHasCheckedInToday] = useState(false)
+  const [checkinLoading, setCheckinLoading] = useState(false)
+  const [showBreathingExercise, setShowBreathingExercise] = useState(false)
   const [userStats, setUserStats] = useState({
     currentStreak: 0,
     longestStreak: 0,
@@ -56,7 +61,7 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
       // Fetch user profile with all necessary fields
       const { data: userProfile } = await supabase
         .from('users')
-        .select('*')
+        .select('username, current_streak_id, xp, level')
         .eq('id', user.id)
         .single()
 
@@ -90,6 +95,19 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
           longestStreak = (longestStreakData as any).duration_days || 0
         }
 
+        // Check if user has already checked in today
+        const today = new Date().toISOString().split('T')[0]
+        const { data: todayCheckin } = await supabase
+          .from('urge_journal_entries')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('encryption_key_id', 'daily_checkin')
+          .gte('created_at', `${today}T00:00:00`)
+          .lte('created_at', `${today}T23:59:59`)
+          .single()
+
+        setHasCheckedInToday(!!todayCheckin)
+
         setUserStats({
           currentStreak,
           longestStreak,
@@ -105,6 +123,13 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
   }
 
   const handleCheckin = async () => {
+    if (hasCheckedInToday) {
+      // Show notification that user has already checked in
+      console.log('Already checked in today')
+      return
+    }
+
+    setCheckinLoading(true)
     try {
       const { data: { user } } = await supabase.auth.getUser()
       const { data: { session } } = await supabase.auth.getSession()
@@ -131,14 +156,24 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
           level: result.data.level || prev.level
         }))
 
+        // Mark as checked in today
+        setHasCheckedInToday(true)
+
         // Show success notification
         console.log('Check-in successful:', result.message)
       } else {
         const errorData = await response.json()
-        console.error('Checkin failed:', errorData.error || response.statusText)
+        if (errorData.error === 'Already checked in today') {
+          setHasCheckedInToday(true)
+          console.log('Already checked in today')
+        } else {
+          console.error('Checkin failed:', errorData.error || response.statusText)
+        }
       }
     } catch (error) {
       console.error('Error during checkin:', error)
+    } finally {
+      setCheckinLoading(false)
     }
   }
 
@@ -202,13 +237,32 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
           
           <motion.button
             onClick={handleCheckin}
-            className="bg-gradient-to-r from-success-green to-emerald-500 hover:from-emerald-500 hover:to-success-green text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            disabled={hasCheckedInToday || checkinLoading}
+            className={`font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl ${
+              hasCheckedInToday 
+                ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-success-green to-emerald-500 hover:from-emerald-500 hover:to-success-green text-white'
+            }`}
+            whileHover={hasCheckedInToday ? {} : { scale: 1.02 }}
+            whileTap={hasCheckedInToday ? {} : { scale: 0.98 }}
           >
             <div className="flex items-center justify-center space-x-2">
-              <Heart className="w-5 h-5" />
-              <span>Check In Today</span>
+              {checkinLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <span>Checking In...</span>
+                </>
+              ) : hasCheckedInToday ? (
+                <>
+                  <CheckCircle className="w-5 h-5" />
+                  <span>Already Checked In Today</span>
+                </>
+              ) : (
+                <>
+                  <Heart className="w-5 h-5" />
+                  <span>Check In Today</span>
+                </>
+              )}
             </div>
           </motion.button>
         </div>
@@ -222,7 +276,7 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
         className="text-center"
       >
         <motion.button
-          onClick={() => setShowUrgeJournal(true)}
+          onClick={() => setShowBreathingExercise(true)}
           className="w-full bg-gradient-to-r from-panic-red to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-6 px-8 rounded-2xl shadow-2xl transition-all duration-200"
           whileHover={{ 
             scale: 1.02, 
@@ -459,6 +513,17 @@ export default function HomeTab({ setActiveTab }: HomeTabProps) {
         isOpen={showUrgeJournal}
         onClose={() => setShowUrgeJournal(false)}
         onSave={() => setRefreshJournalHistory(prev => prev + 1)}
+      />
+
+      {/* Breathing Exercise Modal */}
+      <BreathingExercise
+        isOpen={showBreathingExercise}
+        onClose={() => setShowBreathingExercise(false)}
+        onComplete={() => {
+          setShowBreathingExercise(false)
+          // Navigate to AI Coach tab after breathing exercise
+          setActiveTab?.('ai-coach')
+        }}
       />
 
       {/* Camera Modal */}
