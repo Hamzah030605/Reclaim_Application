@@ -229,6 +229,11 @@ export default function CommunityTab() {
     try {
       const { data: { session } } = await supabase.auth.getSession()
       
+      if (!session) {
+        console.error('No session found')
+        return
+      }
+      
       const response = await fetch(`/api/community/posts/${postId}/like`, {
         method: 'POST',
         headers: {
@@ -268,9 +273,13 @@ export default function CommunityTab() {
               : post
           )
         )
+      } else {
+        console.error('Like API returned error:', result.error)
+        // Optionally show an error message to the user
       }
     } catch (error) {
       console.error('Error liking post:', error)
+      // Optionally show an error message to the user
     } finally {
       // Clear loading state from both ref and state
       likeLoadingRef.current.delete(postId)

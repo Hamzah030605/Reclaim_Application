@@ -30,21 +30,30 @@ export async function POST(
     }
 
     const postId = params.id
+    console.log('Like request for post:', postId, 'by user:', user.id)
 
     // Check if user already liked this post
-    const { data: existingLike } = await supabaseAdmin
+    const { data: existingLike, error: likeCheckError } = await supabaseAdmin
       .from('post_likes')
       .select('id')
       .eq('post_id', postId)
       .eq('user_id', user.id)
       .single()
 
+    console.log('Existing like check:', existingLike, 'Error:', likeCheckError)
+
     if (existingLike) {
+      console.log('User already liked this post, unliking...')
       // Unlike the post
-      await supabaseAdmin
+      const { error: deleteError } = await supabaseAdmin
         .from('post_likes')
         .delete()
         .eq('id', existingLike.id)
+
+      if (deleteError) {
+        console.error('Error deleting like:', deleteError)
+        return NextResponse.json({ error: 'Failed to unlike post' }, { status: 500 })
+      }
 
       // Decrease like count
       const { data: currentPost } = await supabaseAdmin
@@ -54,9 +63,12 @@ export async function POST(
         .single()
       
       if (currentPost) {
+        const newLikeCount = Math.max(0, (currentPost.like_count || 0) - 1)
+        console.log('Updating like count from', currentPost.like_count, 'to', newLikeCount)
+        
         await supabaseAdmin
           .from('community_posts')
-          .update({ like_count: Math.max(0, (currentPost.like_count || 0) - 1) })
+          .update({ like_count: newLikeCount })
           .eq('id', postId)
       }
 
@@ -66,14 +78,24 @@ export async function POST(
         message: 'Post unliked'
       })
     } else {
+      console.log('User has not liked this post, liking...')
       // Like the post
-      await supabaseAdmin
+      const { data: newLike, error: insertError } = await supabaseAdmin
         .from('post_likes')
         .insert({
           post_id: postId,
           user_id: user.id,
           created_at: new Date().toISOString()
         })
+        .select()
+        .single()
+
+      if (insertError) {
+        console.error('Error inserting like:', insertError)
+        return NextResponse.json({ error: 'Failed to like post' }, { status: 500 })
+      }
+
+      console.log('Successfully created like:', newLike)
 
       // Increase like count
       const { data: currentPost } = await supabaseAdmin
@@ -83,9 +105,12 @@ export async function POST(
         .single()
       
       if (currentPost) {
+        const newLikeCount = (currentPost.like_count || 0) + 1
+        console.log('Updating like count from', currentPost.like_count, 'to', newLikeCount)
+        
         await supabaseAdmin
           .from('community_posts')
-          .update({ like_count: (currentPost.like_count || 0) + 1 })
+          .update({ like_count: newLikeCount })
           .eq('id', postId)
       }
 
