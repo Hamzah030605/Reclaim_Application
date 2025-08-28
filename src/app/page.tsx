@@ -101,8 +101,9 @@ export default function HomePage() {
   }
 
   const handleSkipToSignup = () => {
-    // Skip onboarding and go directly to signup
-    router.push('/auth/signup')
+    // Skip introduction and go directly to the quiz (mandatory)
+    setShowPreOnboarding(false)
+    setShowOnboarding(true)
   }
 
   const handleLogin = () => {
@@ -166,13 +167,6 @@ export default function HomePage() {
           className="absolute top-2 sm:top-4 right-2 sm:right-4 px-3 sm:px-4 py-2 bg-white/20 text-white rounded-lg border border-white/30 hover:bg-white/30 transition-all text-sm sm:text-base z-10 font-medium"
         >
           Login
-        </button>
-        {/* Temporary logout button for testing */}
-        <button
-          onClick={handleLogout}
-          className="absolute top-2 sm:top-4 left-2 sm:left-4 px-3 sm:px-4 py-2 bg-red-500/20 text-red-300 rounded-lg border border-red-300/20 hover:bg-red-500/30 transition-all text-sm sm:text-base"
-        >
-          Logout (Test)
         </button>
       </div>
     </div>
