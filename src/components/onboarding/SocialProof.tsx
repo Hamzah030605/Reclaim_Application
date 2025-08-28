@@ -246,7 +246,7 @@ export default function SocialProof({ selectedSymptoms, onComplete, onBack }: So
               >
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 gap-3">
-                  {currentPageData.content.stats.map((stat, index) => {
+                  {currentPageData.content.stats?.map((stat, index) => {
                     const StatIcon = stat.icon
                     return (
                       <motion.div
@@ -267,7 +267,7 @@ export default function SocialProof({ selectedSymptoms, onComplete, onBack }: So
                 {/* Reviews */}
                 <div className="space-y-3">
                   <h3 className="text-lg font-semibold text-gray-900">Recent Reviews</h3>
-                  {currentPageData.content.reviews.map((review, index) => (
+                  {currentPageData.content.reviews?.map((review, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, x: -20 }}
@@ -300,7 +300,7 @@ export default function SocialProof({ selectedSymptoms, onComplete, onBack }: So
                 transition={{ delay: 0.4 }}
                 className="space-y-3"
               >
-                {currentPageData.content.testimonials.map((testimonial, index) => (
+                {currentPageData.content.testimonials?.map((testimonial, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
@@ -360,24 +360,19 @@ export default function SocialProof({ selectedSymptoms, onComplete, onBack }: So
                   </div>
                 </div>
 
-                {/* Key Statistics */}
-                <div className="grid grid-cols-2 gap-3">
-                  {currentPageData.content.statistics.map((stat, index) => {
-                    const StatIcon = stat.icon
-                    return (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.5 + index * 0.1 }}
-                        className="bg-white p-3 rounded-lg border border-gray-200 text-center"
-                      >
-                        <StatIcon className="w-5 h-5 text-blue-500 mx-auto mb-1" />
-                        <div className="text-lg font-bold text-gray-900">{stat.value}</div>
-                        <div className="text-xs text-gray-600">{stat.label}</div>
-                      </motion.div>
-                    )
-                  })}
+                {/* Success Comparison */}
+                <div className="space-y-4">
+                  <div className="bg-white p-3 rounded-lg border border-gray-200">
+                    <h4 className="text-sm font-semibold text-gray-900 mb-2">With Reclaim</h4>
+                    <div className="text-lg font-bold text-green-600 mb-1">{currentPageData.content.comparison.withReclaim.successRate} Success Rate</div>
+                    <div className="text-xs text-gray-600">Avg: {currentPageData.content.comparison.withReclaim.avgTime}</div>
+                  </div>
+                  
+                  <div className="bg-white p-3 rounded-lg border border-gray-200">
+                    <h4 className="text-sm font-semibold text-gray-900 mb-2">Without Support</h4>
+                    <div className="text-lg font-bold text-red-600 mb-1">{currentPageData.content.comparison.withoutReclaim.successRate} Success Rate</div>
+                    <div className="text-xs text-gray-600">Avg: {currentPageData.content.comparison.withoutReclaim.avgTime}</div>
+                  </div>
                 </div>
               </motion.div>
             )}
